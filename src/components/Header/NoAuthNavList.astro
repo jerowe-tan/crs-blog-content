@@ -1,0 +1,166 @@
+---
+// import Icon from "@components/Icon.astro";
+import HeaderDropDownDesign from "./HeaderDropDownDesign.astro";
+// import Dropdown from "@components/Overlay/Dropdown.astro";
+
+const path = Astro.url.pathname;
+
+function isPage(conditionPath:string){
+  const regexString = `^${conditionPath}(?:[\\/?#].*)?$`;
+  return new RegExp(regexString, "gm").test(path)
+}
+---
+<HeaderDropDownDesign>
+  <li>
+    <!-- <Dropdown
+      id="dropdown-information"
+      buttonClass={`
+        block md:mt-0 mt-2
+        ${isPage("/information")
+          ? "btn bg-primary md:!bg-white !text-white md:!text-primary md:btn-none font-semibold"
+          : "btn md:btn-none md:!bg-transparent !px-0 !mx-0 md:hover:text-primary"
+        }
+        rounded
+        flex items-center
+        md:w-auto w-full
+      `}
+      contentClass={`
+        md:w-fit w-full
+      `}
+      class="md:w-fit w-full"
+    >
+      <Fragment slot="button">
+        Information
+        <Icon name="down" class="size-4 mt-1" />
+      </Fragment>
+      <div class=" bg-white rounded-b-lg shadow-sm overflow-hidden pt-2">
+        <ul class="text-sm text-gray-700">
+          <li>
+            <a
+              class={`block px-4 py-2 ${isPage("/information/how-to-use-toyota-rentacar") ? "bg-primary text-white" : "hover:bg-primary hover:text-white"} `}
+              { ...(isPage("/information/how-to-use-toyota-rentacar") ? {"aria-current":"page",href:"#"} : {href:"/information/how-to-use-toyota-rentacar"}) }
+            >
+              How to use Toyota Rent&#x3B1;Car
+            </a>
+          </li>
+          <li>
+            <a
+              class={`block px-4 py-2 ${isPage("/information/service-types") ? "bg-primary text-white" : "hover:bg-primary hover:text-white"} `}
+              { ...(isPage("/information/service-types") ? {"aria-current":"page",href:"#"} : {href:"/information/service-types"}) }
+            >
+              Service Types
+            </a>
+          </li>
+          <li>
+            <a
+              class={`block px-4 py-2 ${isPage("/information/vehicles") ? "bg-primary text-white" : "hover:bg-primary hover:text-white"} `}
+              { ...(isPage("/information/vehicles") ? {"aria-current":"page",href:"#"} : {href:"/information/vehicles"}) }
+            >
+              Vehicle Models
+            </a>
+          </li>
+          <li>
+            <a
+              class={`block px-4 py-2 ${isPage("/information/stations") ? "bg-primary text-white" : "hover:bg-primary hover:text-white"} `}
+              { ...(isPage("/information/stations") ? {"aria-current":"page",href:"#"} : {href:"/information/stations"}) }
+            >
+              Stations
+            </a>
+          </li>
+          <li>
+            <a
+              class={`block px-4 py-2 ${isPage("/information/faq") ? "bg-primary text-white" : "hover:bg-primary hover:text-white"} `}
+              { ...(isPage("/information/faq") ? {"aria-current":"page",href:"#"} : {href:"/information/faq"}) }
+            >
+              FAQ
+            </a>
+          </li>
+          <li>
+            <a
+              class={`block px-4 py-2 ${isPage("/information/terms-services") ? "bg-primary text-white" : "hover:bg-primary hover:text-white"} `}
+              { ...(isPage("/information/terms-services") ? {"aria-current":"page",href:"#"} : {href:"/information/terms-services"}) }
+            >
+              Check Terms of Services
+            </a>
+          </li>
+        </ul>
+      </div>
+    </Dropdown> -->
+  </li>
+  <li class="">
+    <!-- <Dropdown
+      id="dropdown-special-service"
+      buttonClass={`
+        block md:mt-0 mt-2
+        ${isPage("/special-services")
+          ? "btn bg-primary md:!bg-white !text-white md:!text-primary md:btn-none font-semibold"
+          : "btn md:btn-none md:!bg-transparent !px-0 !mx-0 md:hover:text-primary"
+        }
+        rounded
+        md:w-auto w-full
+        flex items-center
+      `}
+      contentClass={`
+        md:w-fit w-full
+      `}
+      class="md:w-fit w-full"
+    >
+      <Fragment slot="button">
+        Special Services
+        <Icon name="down" class="size-4 mt-1" />
+      </Fragment>
+      <div class="bg-white rounded-b-lg shadow-sm overflow-hidden pt-2">
+        <ul class="text-sm text-gray-700">
+          <li>
+            <a
+              class={`block px-4 py-2 ${isPage("/special-services/corporate-account") ? "bg-primary text-white" : "hover:bg-primary hover:text-white"} `}
+              { ...(isPage("/special-services/corporate-account") ? {"aria-current":"page",href:"#"} : {href:"/special-services/corporate-account"}) }
+            >
+              For Corporate Account
+            </a>
+          </li>
+          <li>
+            <a
+              class={`block px-4 py-2 ${isPage("/special-services/long-term-rental-lease") ? "bg-primary text-white" : "hover:bg-primary hover:text-white"} `}
+              { ...(isPage("/special-services/long-term-rental-lease") ? {"aria-current":"page",href:"#"} : {href:"/special-services/long-term-rental-lease"}) }
+            >
+              For long-term rental/lease
+            </a>
+          </li>
+          <li>
+            <a
+              class={`block px-4 py-2 ${isPage("/special-services/car-rental-service-for-hotel-tourism-industry") ? "bg-primary text-white" : "hover:bg-primary hover:text-white"} `}
+              { ...(isPage("/special-services/car-rental-service-for-hotel-tourism-industry") ? {"aria-current":"page",href:"#"} : {href:"/special-services/car-rental-service-for-hotel-tourism-industry"}) }
+            >
+              Car Rental Service for Hotel/Tourism Industry
+            </a>
+          </li>
+          <li>
+            <a
+              class={`block px-4 py-2 ${isPage("/special-services/japanese-customers") ? "bg-primary text-white" : "hover:bg-primary hover:text-white"} `}
+              { ...(isPage("/special-services/japanese-customers") ? {"aria-current":"page",href:"#"} : {href:"/special-services/japanese-customers"}) }
+            >
+              日系企業・日本人向けサービス
+            </a>
+          </li>
+        </ul>
+      </div>
+    </Dropdown> -->
+  </li>
+  <li>
+    <a
+      class={`
+        block md:mt-0 mt-2
+        ${isPage("/blog/list")
+          ? "btn btn-primary md:btn-none md:text-primary font-semibold"
+          : "btn md:btn-none md:hover:text-primary"
+        }
+        rounded
+        `}
+      { ...(isPage("/blog/list") ? {"aria-current":"page",href:"#"} : {href:"/blog/list"}) }
+    >
+      Blogs
+    </a>
+  </li>
+
+</HeaderDropDownDesign>

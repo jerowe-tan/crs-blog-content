@@ -1,0 +1,130 @@
+---
+//--------------
+// Default Page Plate
+//--------------
+
+
+import Layout from "./Layout.astro";
+
+// Components
+import Navbar from "@components/Header/Navbar.astro";
+import Footer from "@components/Footer/Footer.astro";
+// import CookieConsentPanel from "@components/CookieConsentPanel.astro";
+// import PopComponent from "@components/PopComponent.astro";
+// import type { PAGE_TYPE } from "../structure/Description";
+// import TagBasic from "@components/HeadTagging/TagBasic.astro";
+// import TagDescriptor from "@components/HeadTagging/TagDescriptor.astro";
+// import TagKeywords from "@components/HeadTagging/TagKeywords.astro";
+// import TagOG from "@components/HeadTagging/TagOG.astro";
+// import TagPrefetch from "@components/HeadTagging/TagPrefetch.astro";
+import CSSDeclaration from "./CSSDeclaration.astro";
+// import TagFB from "@components/HeadTagging/TagFB.astro";
+// import Breadcrumb from "@components/Breadcrumb.astro";
+
+interface Props {
+  title?: string,
+  noHeader?: boolean,
+  noFooter?: boolean,
+  breadCrumb?: Array<{title:string, url:string|null}>,
+  noContainer?: boolean,
+  clean?: boolean,
+  inClass?: string,
+  expectedHeight?: string,
+  prefetch?: string[],
+  pageMicrodataScope?: string,
+
+  // descriptor?:{
+	// 	title?: string,
+	// 	published?: string,
+	// 	author?: string,
+	// 	authorHandle?: string,
+	// 	keywords?: Array<string|number>,
+	// 	description?: string,
+	// 	type?: PAGE_TYPE,
+	// 	thumbnail?: string,
+  //   locale?: string,
+	// }
+}
+
+const {
+  title = "Toyota RentαCar",
+  noHeader = false,
+  noFooter = false,
+  breadCrumb,
+  noContainer = false,
+  clean = false,
+  expectedHeight = "50vh",
+  inClass = "",
+  // prefetch,
+  // descriptor,
+  pageMicrodataScope = "https://schema.org/WebPage",
+} = Astro.props;
+
+---
+
+<Layout title={title} pageMicrodataScope={pageMicrodataScope}>
+  <Fragment slot="head" >
+
+    <!-- <TagKeywords
+      keywords={descriptor?.keywords}
+    />
+
+    <TagBasic
+      title={descriptor?.title}
+      description={descriptor?.description}
+      author={descriptor?.author}
+      authorHandle={descriptor?.authorHandle}
+      keywords={descriptor?.keywords}
+      published={descriptor?.published}
+    />
+
+    <TagDescriptor
+      title={descriptor?.title}
+      description={descriptor?.description}
+      author={descriptor?.author}
+      authorHandle={descriptor?.authorHandle}
+      keywords={descriptor?.keywords}
+      published={descriptor?.published}
+      type={descriptor?.type}
+      thumbnail={descriptor?.thumbnail}
+    />
+
+    <TagOG
+      description={descriptor?.description}
+      locale={descriptor?.locale}
+    />
+
+    <TagFB />
+
+    <TagPrefetch links={prefetch} /> -->
+    <slot name="head" />
+  </Fragment>
+  <div class="relative min-h-screen flex flex-col">
+    {clean?"":<>
+      {noHeader ? "":<>
+        <Navbar />
+      </>}
+    </>}
+
+    {noContainer ?<>
+      <slot />
+    </>:<>
+      <div class={`container-crs relative ${inClass}`} style={`min-height: ${expectedHeight}`}>
+        {/* {breadCrumb && <Breadcrumb linkedList={breadCrumb}/>} */}
+        <slot />
+      </div>
+    </>}
+
+    {clean?"": <>
+      {noFooter ? "":<>
+        <Footer />
+      </>}
+    </>}
+
+  <!-- {clean?"": <CookieConsentPanel />} -->
+
+  </div>
+
+  <!-- <PopComponent /> -->
+  <CSSDeclaration />
+</Layout>

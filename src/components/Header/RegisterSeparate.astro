@@ -1,0 +1,23 @@
+---
+const path = Astro.url.pathname;
+
+function isPage(conditionPath:string){
+  const regexString = `^${conditionPath}(?:[\\/?#].*)?$`;
+  return new RegExp(regexString, "gm").test(path)
+}
+---
+<div class="font-medium md:hidden flex md:flex-row flex-col md:p-0 mr-4">
+  <a 
+    class={`
+      block btn md:btn-none 
+      ${isPage("/auth/register") 
+        ? "btn-primary md:text-primary font-semibold" 
+        : "md:hover:text-primary"
+      }
+      rounded
+      `}
+    { ...(isPage("/auth/register") ? {"aria-current":"page",href:"#"} : {href:"/auth/register"}) }
+  >
+    Register
+  </a>
+</div>

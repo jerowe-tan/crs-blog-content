@@ -1,0 +1,98 @@
+---
+import HeaderDropDownDesign from "./HeaderDropDownDesign.astro";
+
+const path = Astro.url.pathname;
+
+function isPage(conditionPath:string){
+  const regexString = `^${conditionPath}(?:[\\/?#].*)?$`;
+  return new RegExp(regexString, "gm").test(path)
+}
+---
+<HeaderDropDownDesign>
+  <li>
+    <a 
+      class={`
+        block  md:mt-0 mt-2
+        ${isPage("/booking") 
+          ? "btn btn-primary md:btn-none md:text-primary font-semibold" 
+          : "btn md:btn-none md:hover:text-primary"
+        }
+        rounded
+        `}
+      { ...(isPage("/booking") ? {"aria-current":"page",href:"#"} : {href:"/booking"}) }
+    >
+      Booking
+    </a>
+  </li>
+  <li>
+    <a 
+      class={`
+        block  md:mt-0 mt-2
+        ${isPage("/manage") 
+          ? "btn btn-primary md:btn-none md:!bg-transparent md:text-primary font-semibold" 
+          : "btn md:btn-none md:hover:text-primary"
+        }
+        rounded
+        `}
+      { ...(isPage("/manage") ? {"aria-current":"page",href:"/manage"} : {href:"/manage"}) }
+    >
+      Manage Bookings
+    </a>
+  </li>
+  <!-- <li>
+    <a 
+      class={`
+        block  md:mt-0 mt-2
+        ${isPage("/account") 
+          ? "btn btn-primary md:btn-none md:!bg-transparent md:text-primary font-semibold" 
+          : "btn md:btn-none md:hover:text-primary"
+        }
+        rounded
+        `}
+      { ...(isPage("/account") ? {"aria-current":"page",href:"/account"} : {href:"/account"}) }
+    >
+      Account
+    </a>
+  </li> -->
+  <li>
+    <a 
+      id="log-out-button"
+      class={`
+        block  md:mt-0 mt-2
+        ${isPage("/auth/logout") 
+          ? "btn btn-primary md:btn-none md:!bg-transparent md:text-primary font-semibold" 
+          : "btn md:btn-none md:hover:text-primary"
+        }
+        rounded
+        `}
+      { ...(isPage("/auth/logout") ? {"aria-current":"page",href:"#"} : {href:"#"}) }
+      
+    >
+      Logout
+    </a>
+  </li>
+</HeaderDropDownDesign>
+
+<script>
+  // import { DOMPopTransformer } from "@jsarmyknife/native--dom";
+  // import { Modal } from "@jsarmyknife/native--pop";
+  // import { Storage } from "@jsarmyknife/native--storage";
+  // import { actions } from "astro:actions";
+  // import { navigate } from 'astro:transitions/client';
+  
+  // const logOutButton = document.getElementById("log-out-button");
+  
+  // logOutButton?.addEventListener("click", async ()=>{
+  //   // const AUTH_KEY = new Storage<string>("CRS_SESSION_KEY");
+  //   // AUTH_KEY.remove();
+  //   const warningPop = new Modal(DOMPopTransformer);
+  //   warningPop.type("info").title("Logout").message("You are about to logout. Are you sure?").button("Yes", "Close", true, true).callback(async ()=>{
+  //     const loadingPop = new Modal(DOMPopTransformer);
+  //     loadingPop.type("loading").title("Logging Out").message("Please wait. . .").run();
+  //     await actions.authentication.logout();
+  //     navigate("/");
+  //   }).run();
+  // })
+</script>
+  
+  

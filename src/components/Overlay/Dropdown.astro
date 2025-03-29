@@ -1,0 +1,27 @@
+---
+interface Props {
+  id:string,
+  contentClass?:string,
+  buttonClass?:string,
+  class?:string
+}
+const {id, contentClass = '', buttonClass = '', class:className=''} = Astro.props;
+---
+
+<div class={`hs-dropdown relative flex ${className}`}>
+  <button id={id} aria-expanded="false" aria-label="Menu" type="button" 
+    class={`hs-dropdown-toggle inline-flex justify-center items-center gap-x-2 ${buttonClass}`}
+  >
+    <slot name="button" >
+      Action
+    </slot>
+  </button>
+
+  <div aria-labelledby={id} role="menu" 
+    class={`hs-dropdown-menu duration hidden z-10 min-w-60 ${contentClass}`} 
+  >
+    <slot >
+      Sample
+    </slot>
+  </div>
+</div>

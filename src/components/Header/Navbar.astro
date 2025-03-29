@@ -1,0 +1,31 @@
+---
+import NoAuthNavList from "./NoAuthNavList.astro";
+import AuthNavList from "./AuthNavList.astro";
+import HeaderLogo from "../../assets/toyota-rentacar-ph-logo.png";
+import RegisterSeparate from "./RegisterSeparate.astro";
+import Dropdown from "@components/Overlay/Dropdown.astro";
+import Icon from "@components/Icon.astro";
+
+// const isLogin =  Astro.cookies.has("CRS_SESSION_KEY");
+---
+<nav class="sticky top-0 z-20 bg-white border-gray-200 shadow">
+  <div class="max-w-screen-xl flex flex-wrap items-center mx-auto md:py-4 py-2 sm:pr-5 px-1 min-h-14 sm:min-h-16 align-middle justify-items-center">
+    <a href="/" class="flex items-center mr-auto">
+      <img class="mr-3 h-6 sm:h-7" src={HeaderLogo.src} alt="Toyota RentaCar" />
+    </a>
+
+    <!-- {!isLogin ? <RegisterSeparate /> : ""} -->
+
+    <Dropdown
+      id="navbar-trigger"
+      buttonClass=" md:hidden"
+      contentClass="md:block w-full"
+    >
+      <Fragment slot="button">
+        <Icon name="hamburgerMenu" outClass="size-8 text-gray-500" />
+      </Fragment>
+      <NoAuthNavList />
+      <!-- {isLogin ? <AuthNavList /> : <NoAuthNavList />} -->
+    </Dropdown>
+  </div>
+</nav>
