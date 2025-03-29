@@ -3,17 +3,17 @@
   
 }
 #elementalist h1{
-  @apply md:text-6xl sm:text-4xl text-2xl mb-16;
+  @apply lg:text-7xl sm:text-6xl text-4xl font-semibold  mb-16;
   line-height: 1.2!important;
 }
 #elementalist h2{
-  @apply md:text-4xl sm:text-2xl text-xl mt-16 mb-2;
+  @apply lg:text-4xl sm:text-3xl text-2xl font-semibold mt-16 mb-2;
 }
 #elementalist h3{
-  @apply sm:text-2xl text-xl font-normal mt-10 mb-1;
+  @apply sm:text-2xl text-xl mt-10 mb-1;
 }
 #elementalist p{
-  @apply mb-5
+  @apply mb-5 font-light
 }
 #elementalist ol{
   @apply list-decimal pl-6

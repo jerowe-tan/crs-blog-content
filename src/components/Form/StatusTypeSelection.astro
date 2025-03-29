@@ -1,0 +1,19 @@
+---
+interface Props {
+  id?:string,
+  class?:string,
+  value?:string,
+}
+const {id="status-type-selection", class:className="", value="DRAFT"} = Astro.props;
+---
+
+<astro-status-type-selection class={className}>
+  <select id={id} class="select" value={value}>
+    <option selected={"DRAFT"} value="DRAFT">
+      Draft
+    </option>
+    <option selected={"PUBLISHED"} value="PUBLISHED">
+      Published
+    </option>
+  </select>
+</astro-status-type-selection>

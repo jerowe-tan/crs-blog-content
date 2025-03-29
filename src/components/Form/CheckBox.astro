@@ -1,0 +1,15 @@
+---
+import { capitalFirstOnly } from '@jsarmyknife/native--parse';
+
+interface Props {
+  id: string,
+  display?:string,
+  value?: string,
+  class?: string,
+}
+const {id="vehicle-model-selection", value="SEDAN", class:className="", display} = Astro.props;
+---
+<div class={`flex gap-1 ${className}`}>
+  <input id={`${id}`} type="checkbox" class=" checkbox-primary mt-[2px]"  name={`${id}`} value={value} />
+  <label for={`${id}`} class="label cursor-pointer">{display ? display : capitalFirstOnly(id)}</label>
+</div>

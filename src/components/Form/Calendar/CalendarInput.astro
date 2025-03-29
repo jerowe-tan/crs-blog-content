@@ -1,0 +1,246 @@
+---
+import Icon from '@components/Icon.astro';
+import { DateNavigator, transformDate } from '@jsarmyknife/native--math';
+import type { Options } from 'flatpickr/dist/types/options';
+
+interface Props {
+  id: string,
+  minDate?: Date,
+  maxDate?: Date,
+  required?: boolean,
+  config?:{
+    date?:Options,
+    time?:Options,
+  },
+}
+const { id = "calendar-input", minDate = new DateNavigator().setTimezone("Asia/Manila"), maxDate = new DateNavigator().setTimezone("Asia/Manila").nextDay(31), required=false, config={} } = Astro.props;
+---
+<astro-calendar-input>
+  <input type="hidden" id={id+"-config"} class = "input calendar-input-config" value={JSON.stringify(config)}/>
+  <input type="hidden" id={id} class="input calendar-input-for-this-component" />
+  <input type="hidden" id={id+"-min"} class="calendar-input-min-date" value={transformDate(minDate, "iso")} />
+  <input type="hidden" id={id+"-max"} class="calendar-input-max-date" value={transformDate(maxDate, "iso")} />
+  <div class="flex basis-full gap-1">
+    <div class="basis-full !p-0 overflow-hidden !flex !flex-nowrap">
+      <input
+        id="calendar-date"
+        type="text"
+        class="input !border-r-0 !rounded-r-none"
+        required={required}
+        placeholder={"Ex "+transformDate(new Date(), "yyyy-mm-dd")}
+      />
+      <button type="button" id="date-icon-button" class="input !w-auto !rounded-l-none" title="toggle">
+        <Icon name="calendarDate" outClass="size-4 text-gray-500" />
+      </button>
+    </div>
+    <div class="basis-48 !p-0 overflow-hidden !flex !flex-nowrap">
+      <input
+        id="calendar-time"
+        type="text"
+        class="input !border-r-0 !rounded-r-none"
+        required={required}
+        placeholder={"Time"}
+      />
+      <button type="button" id="time-icon-button" class="input !w-auto !rounded-l-none" title="toggle">
+        <Icon name="calendarTime" outClass="size-4 text-gray-500" />
+      </button>
+    </div>
+  </div>
+</astro-calendar-input>
+
+
+<script>
+//---> Import
+import { ElementMaker } from "@jsarmyknife/native--dom";
+import { DateNavigator, transformDate } from "@jsarmyknife/native--math";
+import flatpickr from "flatpickr";
+import type { Options } from "flatpickr/dist/types/options";
+
+ElementMaker("astro-calendar-input", async (element)=>{
+  if(element == null){
+    return;
+  }
+
+  //---> Const
+  const dateElement = element.querySelector("#calendar-date") as HTMLInputElement;
+  const timeElement = element.querySelector("#calendar-time") as HTMLInputElement;
+  const minDateElement = element.querySelector(".calendar-input-min-date") as HTMLInputElement;
+  const maxDateElement = element.querySelector(".calendar-input-max-date") as HTMLInputElement;
+  const configElement = element.querySelector(".calendar-input-config") as HTMLInputElement;
+  let minDate = new DateNavigator(minDateElement.value);
+  let maxDate = new DateNavigator(maxDateElement.value);
+  const hiddenElement = element.querySelector(".calendar-input-for-this-component") as HTMLInputElement;
+  const dateButton = element.querySelector("#date-icon-button") as HTMLButtonElement;
+  const timeButton = element.querySelector("#time-icon-button") as HTMLButtonElement;
+
+  //flatpcker
+  const datePicker  = flatpickr(dateElement, {
+    altInput: true,
+    altFormat: "F j, Y",
+    dateFormat: "Y-m-d",
+    minDate: `${minDate.getFullYear()}-${minDate.getMonth()+1}-${minDate.getDate()}`,
+    maxDate: maxDate,
+    disableMobile: true,
+    ...( (()=>{
+      try{
+        if(configElement.value != ""){
+          const config = JSON.parse(configElement.value).date;
+          if(config.disable){
+            if(config.disable.length > 0){
+              config.disable = config.disable.map((d:string)=>{
+                if(checkIfStringIsFunction(d)){
+                  return eval(`(${d})`);
+                }
+                return d;
+              });
+            }
+          }
+          return config;
+        }
+      }catch{
+        return {};
+      }
+      return {} as Options;
+    })() as Options),
+  });
+  const timePicker = flatpickr(timeElement, {
+    enableTime: true,
+    noCalendar: true,
+    dateFormat: "H:i",
+    minDate: (()=>{
+      const newDate = minDate;
+      newDate.nextMinute( (((newDate.getMinutes() + 15)%15)-15 )*-1 );
+      return newDate;
+    })(),
+    maxDate: new DateNavigator().nextDay(31),
+    minuteIncrement: 15,
+    disableMobile: true,
+    time_24hr: true,
+    ...( (()=>{
+      try{
+        if(configElement.value != ""){
+          return JSON.parse(configElement.value).time;
+        }
+      }catch{
+        return {};
+      }
+      return {} as Options;
+    })() as Options),
+  });
+
+  //----> Functionalities
+  function UpdateMinDate(){
+    if(minDate.getDate() != new DateNavigator(dateElement.value).getDate()){
+      timePicker.set("minDate", new DateNavigator().prevHour(new Date().getHours()).prevMinute(new Date().getMinutes()));
+    }else{
+      timePicker.set("minDate", new DateNavigator(minDate));
+    }
+  }
+  function checkIfStringIsFunction(str:string){
+    try{
+      const func = eval(`(${str})`);
+      if(typeof func === "function"){
+        return true;
+      }
+      return false;
+    }catch{
+      return false;
+    }
+  }
+  function UpdateTimer(){
+    const newDate = minDate;
+    newDate.nextMinute( ((newDate.getMinutes() + 15)%15)*-1 );
+
+    if(dateElement.value != ""){
+      const selectedDate = new DateNavigator(dateElement.value+"T"+timeElement.value);
+      //Chcek if time is within the interval of 15 minutes
+      if(selectedDate.getMinutes() % 15 != 0){
+        timePicker.setDate(newDate, true);
+        timeElement.value = transformDate(newDate, "time-24-seconds").replace(/:\d\d$/, "");
+      }
+      //Check if the time is above the mindDate
+      if(selectedDate < newDate){
+        timePicker.setDate(newDate, true);
+        timeElement.value = transformDate(newDate, "time-24-seconds").replace(/:\d\d$/, "");
+      }
+    }
+    
+  }
+  function UpdateHiddenElement(){
+    if(dateElement.value == "" || timeElement.value == ""){
+      return;
+    }
+    hiddenElement.value = dateElement.value+"T"+timeElement.value;
+    hiddenElement.dispatchEvent(new Event("input"));
+  }
+
+  //----> listener
+  configElement.addEventListener("change", ()=>{
+    try{
+      if(configElement.value == ""){return;}
+      const dateConfig = JSON.parse(configElement.value).date;
+      const timeConfig = JSON.parse(configElement.value).time;
+      if(dateConfig.disable){
+        if(dateConfig.disable.length > 0){
+          dateConfig.disable = dateConfig.disable.map((d:string)=>{
+            if(checkIfStringIsFunction(d)){
+              return eval(`(${d})`);
+            }
+            return d;
+          });
+        }
+      }
+      
+      datePicker.set(dateConfig as Options) ;
+      timePicker.set(timeConfig as Options);
+    }catch{
+      return;
+    }
+  });
+  dateButton.addEventListener("click", ()=>{
+    datePicker.open();
+  });
+  timeButton.addEventListener("click", ()=>{
+    timePicker.open();
+  });
+  dateElement.addEventListener("change", ()=>{
+    UpdateMinDate()
+    UpdateTimer();
+    UpdateHiddenElement();
+  });
+  timeElement.addEventListener("change", ()=>{
+    const newDate = new DateNavigator((dateElement.value||transformDate(minDate, "yyyy-mm-dd"))+"T"+timeElement.value);
+    newDate.nextMinute( ((newDate.getMinutes() + 15)%15)*-1 );
+    timeElement.value = transformDate(newDate, "time-24-seconds").replace(/:\d\d$/, "");
+  
+    UpdateHiddenElement();
+  });
+  
+  //we can receive updates from outside as well
+  hiddenElement.addEventListener("change", ()=>{
+    const value = hiddenElement.value;
+    if(value == ""){return;}
+    const [date, time] = value.split("T");
+    dateElement.value = date;
+    datePicker.setDate(date);
+    UpdateMinDate(); 
+    timePicker.input.value = time;
+    timePicker.setDate(time);
+  
+  });
+
+  minDateElement.addEventListener("change", ()=>{
+    const newMinDate = new DateNavigator(minDateElement.value);
+    datePicker.set("minDate", `${newMinDate.getFullYear()}-${newMinDate.getMonth()+1}-${newMinDate.getDate()}`);
+    timePicker.set("minDate", newMinDate);
+    minDate = newMinDate;
+  });
+  maxDateElement.addEventListener("change", ()=>{
+    const newMaxDate = new DateNavigator(maxDateElement.value);
+    datePicker.set("maxDate", `${newMaxDate.getFullYear()}-${newMaxDate.getMonth()+1}-${newMaxDate.getDate()}`);
+    timePicker.set("maxDate", new DateNavigator(maxDateElement.value));
+    maxDate = new DateNavigator(maxDateElement.value);
+  });
+
+}, true);
+</script>

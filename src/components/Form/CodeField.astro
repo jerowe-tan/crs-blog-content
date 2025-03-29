@@ -1,0 +1,121 @@
+---
+/**
+ * @variables id's
+ * - {id} - id of an element use to receive the input from outside of this component 
+ */
+interface Props{
+  id?: string,
+  inputLength?: number,
+  class?: string,
+  inputWidth?: string
+}
+const {id="code-field", inputLength = 6, class: className = '', inputWidth="42px"} = Astro.props;
+---
+
+<astro-code-field>
+  <input id{id} type="hidden" />
+  <div class="flex justify-center space-x-2">
+    {Array.from({length: inputLength}).map((_, index) => (
+      <input id={`code-field-${index}`} type="text" class="input" style={`flex-basis: ${inputWidth}`} />
+    ))}
+  </div>
+</astro-code-field>
+
+<script>
+import { ElementMaker } from "@jsarmyknife/native--dom";
+
+ElementMaker("astro-code-field", (element)=>{
+  const mainInput = element.children[0] as HTMLInputElement;
+
+  const codeFields = [...Array.from(element.querySelectorAll<HTMLInputElement>("input[type='text']"))];
+  codeFields.forEach((codeField, index) => {
+    codeField.addEventListener("input", (e: Event) => {
+      const target = e.target as HTMLInputElement | null;
+      if (!target) return;
+      target.value = target.value.replace(/[^0-9]/g, "");
+      const combinedValue = codeFields.map((codeField) => codeField.value).join("").slice(0, codeFields.length);
+      
+      codeFields.forEach((codeField, i) => {
+        codeField.value = "";
+      });
+      for(let i = 0; i < combinedValue.length; i++){
+        codeFields[i].value = combinedValue[i];
+      }
+
+      //Check if the current is empty
+      if(codeField.value === ""){
+        //Check if the previous is larger than new
+        if(mainInput.value.length > combinedValue.length){
+          //If so move the focus to the previous
+          if(codeFields[combinedValue.length-1])
+            codeFields[combinedValue.length-1].focus();
+        }else{
+          //If so move the focus just before the max length of current value
+          if (combinedValue.length < codeFields.length) {
+            codeFields[combinedValue.length].focus();
+          }else{
+            codeFields[combinedValue.length-1].focus();
+          }
+        }
+        
+      }else{
+        //Check if the previous is larger than new
+        if(mainInput.value.length > combinedValue.length){
+          //If so move the focus to the previous
+          if(codeFields[index-1])
+            codeFields[index-1].focus();
+          else{
+            codeFields[0].focus();
+          }
+        }else{
+          const nextIndex = combinedValue.length - mainInput.value.length;
+          //If so move the focus to the next
+          if(codeFields[index+nextIndex]){
+            codeFields[index+nextIndex].focus();
+          }
+          else
+            codeFields[codeFields.length-1].focus();
+        }
+      }
+
+
+      mainInput.value = combinedValue;
+      //trigger input event of main
+      mainInput.dispatchEvent(new Event("input"));
+
+    });
+
+    codeField.addEventListener("keydown", (e: KeyboardEvent) => {4
+      const target = e.target as HTMLInputElement | null;
+      if (!target) return;
+
+      if(e.key === "Backspace" && !target.value && index > 0 && mainInput.value.length-1 >= 0 && codeFields[mainInput.value.length-1]){
+        codeFields[mainInput.value.length-1].focus();
+      }
+
+      if(e.key === "ArrowLeft" && index > 0 && codeFields[index-1]){
+        codeFields[index-1].focus();
+      }else if(e.key === "ArrowRight" && index < codeFields.length-1 && codeFields[index+1]){
+        codeFields[index+1].focus(); 
+      }
+    });
+    codeField.addEventListener("focus", (e: FocusEvent) => {
+      const target = e.target as HTMLInputElement | null;
+      if (!target) return;
+      
+      setTimeout(()=>{
+        if (target.selectionStart !== null) {
+        target.selectionStart = target.selectionEnd = target.value.length;
+      }
+      }, 1);
+    
+    });
+
+    codeField.addEventListener("click", (e: FocusEvent) => {
+      const target = e.target as HTMLInputElement | null;
+      if (!target) return;
+    });
+  });
+
+});
+</script>

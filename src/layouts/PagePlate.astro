@@ -18,6 +18,8 @@ import Footer from "@components/Footer/Footer.astro";
 // import TagOG from "@components/HeadTagging/TagOG.astro";
 // import TagPrefetch from "@components/HeadTagging/TagPrefetch.astro";
 import CSSDeclaration from "./CSSDeclaration.astro";
+import PopComponent from "@components/PopComponent.astro";
+import Breadcrumb from "@components/Breadcrumb.astro";
 // import TagFB from "@components/HeadTagging/TagFB.astro";
 // import Breadcrumb from "@components/Breadcrumb.astro";
 
@@ -110,7 +112,7 @@ const {
       <slot />
     </>:<>
       <div class={`container-crs relative ${inClass}`} style={`min-height: ${expectedHeight}`}>
-        {/* {breadCrumb && <Breadcrumb linkedList={breadCrumb}/>} */}
+        {breadCrumb && <Breadcrumb linkedList={breadCrumb}/>}
         <slot />
       </div>
     </>}
@@ -126,5 +128,6 @@ const {
   </div>
 
   <!-- <PopComponent /> -->
+  <PopComponent />
   <CSSDeclaration />
 </Layout>

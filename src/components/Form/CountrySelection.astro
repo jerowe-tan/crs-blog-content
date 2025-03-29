@@ -1,0 +1,21 @@
+---
+import {countryList} from "@jsarmyknife/native--location";
+interface Props {
+  id?:string
+}
+const {id="country"} = Astro.props;
+---
+<astro-country-selection>
+  <select id={id} class="select">
+    {countryList.map((x)=>{
+      if(x.name === "Philippines"){
+        return <option value={x.name} selected>{x.name}</option>
+      }
+      return <option value={x.name}>{x.name}</option>
+    })}
+  </select>
+</astro-country-selection>
+
+<script>
+
+</script>

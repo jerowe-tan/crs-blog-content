@@ -1,0 +1,35 @@
+---
+import Icon from "./Icon.astro";
+---
+<div id="pop-container"></div>
+<template id="template-pop-component">
+  <dialog id="pop-component" class="my-dialog custom-scroll" style="width: 500px;">
+    <div class="flex items-center px-2 py-2 border-b-[1px] border-b-gray-200 gap-2">
+      <div id="pop-icon-contents" class="">
+        <Icon id="pop-icon-check" name={"check"} outClass={`size-6 text-green-600`} />
+        <Icon id="pop-icon-cross" name={"cross"} outClass={`size-6 text-red-600`} />
+        <Icon id="pop-icon-i" name={"i"} outClass={`size-6 text-sky-400`} />
+        <Icon id="pop-icon-warning" name={"warning"} outClass={`size-6 text-yellow-600`} />
+        <Icon id="pop-icon-loadingDonut" name={"loadingDonut"} inClass={``} outClass={`size-6 text-primary my-spin`} />
+      </div>
+      <div id="pop-title" class="mr-auto text-ellipsis overflow-hidden">
+        <h2 class={`text-center mb-1 text-gray-800 font-semibold h8`}></h2>
+      </div>
+      <button id="pop-close-button" class="ml-auto hover:bg-gray-300 focus:outline-none rounded-full p-1 h-full min-h-0">
+        <Icon name="close" outClass="size-6 text-gray-900" />
+      </button>
+    </div>
+
+    <div id="pop-message" class="p-2 w-full text-center mt-1 font-light">
+      <p class={` text-center`}></p>
+    </div>
+
+    <div id="pop-additional" class="">
+    </div>
+
+    <div id="pop-button-container" class="p-2 flex justify-center w-full gap-2 mb-1 mt-1 flex-wrap">
+      <button id="pop-button-accept" class="btn btn-primary">Okay</button>
+      <button id="pop-button-cancel" class="btn btn-ghost underline underline-offset-4 ">Cancel</button>
+    </div>
+  </dialog>
+</template>

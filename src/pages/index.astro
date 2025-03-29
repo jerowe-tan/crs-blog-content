@@ -1,8 +1,147 @@
 ---
 import PagePlate from "@layouts/PagePlate.astro";
-
 ---
 
 <PagePlate>
-	Hello World
+	<!-- Main Content -->
+	<main class="mt-10 mb-20">
+		<!-- Stats Overview -->
+		<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+			<div class="bg-white p-6 rounded-lg shadow">
+				<div class="flex items-center">
+					<div class="p-3 rounded-full bg-primary bg-opacity-10">
+						<svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+						</svg>
+					</div>
+					<div class="ml-4">
+						<p class="text-sm font-medium text-gray-500">Total Posts</p>
+						<p class="text-2xl font-semibold text-gray-900">0</p>
+					</div>
+				</div>
+			</div>
+
+			<div class="bg-white p-6 rounded-lg shadow">
+				<div class="flex items-center">
+					<div class="p-3 rounded-full bg-blue-100">
+						<svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"></path>
+						</svg>
+					</div>
+					<div class="ml-4">
+						<p class="text-sm font-medium text-gray-500">Drafts</p>
+						<p class="text-2xl font-semibold text-gray-900">0</p>
+					</div>
+				</div>
+			</div>
+
+			<div class="bg-white p-6 rounded-lg shadow">
+				<div class="flex items-center">
+					<div class="p-3 rounded-full bg-green-100">
+						<svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+						</svg>
+					</div>
+					<div class="ml-4">
+						<p class="text-sm font-medium text-gray-500">Total Views</p>
+						<p class="text-2xl font-semibold text-gray-900">0</p>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Recent Activity -->
+		<div class="bg-white shadow rounded-lg overflow-hidden">
+			<div class="px-6 py-4 border-b border-gray-200">
+				<h2 class="text-lg font-medium text-gray-900">Recent Activity</h2>
+			</div>
+			<ul class="divide-y divide-gray-200">
+				<li class="px-6 py-4">
+					<div class="flex items-center">
+						<div class="flex-shrink-0 bg-primary text-white rounded-full w-10 h-10 flex items-center justify-center">
+							<span></span>
+						</div>
+						<div class="ml-4">
+							<p class="text-sm font-medium text-gray-900">New Blog is created "Example Mockup"</p>
+							<p class="text-sm text-gray-500">2 hours ago</p>
+						</div>
+					</div>
+				</li>
+				<li class="px-6 py-4">
+					<div class="flex items-center">
+						<div class="flex-shrink-0 bg-gray-200 text-gray-700 rounded-full w-10 h-10 flex items-center justify-center">
+							<span></span>
+						</div>
+						<div class="ml-4">
+							<p class="text-sm font-medium text-gray-900">Blog updated "Car Updates"</p>
+							<p class="text-sm text-gray-500">1 day ago</p>
+						</div>
+					</div>
+				</li>
+				<li class="px-6 py-4">
+					<div class="flex items-center">
+						<div class="flex-shrink-0 bg-gray-200 text-gray-700 rounded-full w-10 h-10 flex items-center justify-center">
+							<span></span>
+						</div>
+						<div class="ml-4">
+							<p class="text-sm font-medium text-gray-900">Blog updated "Rental Fee Updates"</p>
+							<p class="text-sm text-gray-500">2 days ago</p>
+						</div>
+					</div>
+				</li>
+			</ul>
+			<div class="px-6 py-4 bg-gray-50 text-right">
+				<a href="/blog" class="text-primary font-medium hover:text-primary-dark">View all activity →</a>
+			</div>
+		</div>
+
+		<!-- Quick Actions -->
+		<div class="mt-8">
+			<h2 class="text-lg font-medium text-gray-900 mb-4">Quick Actions</h2>
+			<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+				<a href="/blog/create" class="bg-white p-6 rounded-lg shadow hover:shadow-md transition-shadow">
+					<div class="flex items-center">
+						<div class="p-3 rounded-full bg-primary bg-opacity-10">
+							<svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+							</svg>
+						</div>
+						<div class="ml-4">
+							<p class="font-medium text-gray-900">Create New Post</p>
+							<p class="text-sm text-gray-500">Start writing a new blog post</p>
+						</div>
+					</div>
+				</a>
+				<a href="/blog/list" class="bg-white p-6 rounded-lg shadow hover:shadow-md transition-shadow">
+					<div class="flex items-center">
+						<div class="p-3 rounded-full bg-purple-100">
+							<svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+							</svg>
+						</div>
+						<div class="ml-4">
+							<p class="font-medium text-gray-900">Manage Blogs</p>
+							<p class="text-sm text-gray-500">Organize your blog list</p>
+						</div>
+					</div>
+				</a>
+				<a href="#" class="bg-white p-6 rounded-lg shadow hover:shadow-md transition-shadow">
+					<div class="flex items-center">
+						<div class="p-3 rounded-full bg-yellow-100">
+							<svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+							</svg>
+						</div>
+						<div class="ml-4">
+							<p class="font-medium text-gray-900">Update Content Status</p>
+							<p class="text-sm text-gray-500">Plan your content ahead of time</p>
+						</div>
+					</div>
+				</a>
+			</div>
+		</div>
+	</main>
 </PagePlate>
+

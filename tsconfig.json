@@ -1,5 +1,8 @@
 {
   "compilerOptions": {
+    "allowJs": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "plugins": [
       {
         "name": "@astrojs/ts-plugin"
@@ -10,9 +13,19 @@
       "@components/*": ["src/components/*"],
       "@layouts/*": ["src/layouts/*"],
       "@assets/*": ["src/assets/*"],
+      "@utils/*": ["src/utils/*"],
+      "@model/*": ["src/model/*"],
     }
   },
   "extends": "astro/tsconfigs/strict",
-  "include": [".astro/types.d.ts", "**/*"],
-  "exclude": ["dist"]
+  "include": [
+    ".astro/types.d.ts", 
+    "**/*",
+    "src/types/**/*.d.ts"
+
+  ],
+  "exclude": ["dist"],
+
+  "sourceMap": true,
+  "lib": ["ESNext", "DOM"]
 }

@@ -1,0 +1,59 @@
+---
+import BlogFormat from "@components/blog/BlogFormat.astro";
+import Icon from "@components/Icon.astro";
+import PagePlate from "@layouts/PagePlate.astro";
+import {marked} from "marked";
+
+//Get Params
+const { slug } = Astro.params;
+const responseMd = await fetch(Astro.url.origin+"/api/blog/"+slug+".md");
+const responseJson = await fetch(Astro.url.origin+"/api/blog/"+slug+".json");
+if(responseMd.status != 200 || responseMd.headers.get("content-type") !== "text/markdown" || responseJson.status != 200 || responseJson.headers.get("content-type") !== "application/json"){
+  return Astro.redirect("/blog/list")
+}
+const markdownContent = await responseMd.text();
+const jsonContent = (await responseJson.json()).data;
+
+const breadCrumb = [
+  {
+    title: "Blogs",
+    url: "/blog",
+  },
+  {
+    title: jsonContent.title,
+    url: null,
+  },
+];
+---
+<PagePlate title={`Edit`} breadCrumb={breadCrumb}>
+  <header class="mb-5">
+    <div class="flex gap-2">
+      <a href={"/blog/edit/"+slug} class="btn btn-primary">
+        <Icon name="edit" outClass="size-5" /> Edit 
+      </a>
+      <button id="delete-button" type="button" class="btn btn-error">Delete</button>
+      <input type="hidden" id="data" value={JSON.stringify(jsonContent)} />
+    </div>
+  </header>
+  <BlogFormat>
+    <Fragment set:html={marked(markdownContent)} />
+  </BlogFormat>
+</PagePlate>
+<script>
+//---> Import
+
+import { deletePop } from "src/script/deletePop";
+import type { DATA_DB } from "src/structure/blog";
+
+
+//---> Constant
+const deleteButton = document.querySelector("#delete-button") as HTMLButtonElement;
+const blogData = JSON.parse((document.querySelector("#data") as HTMLInputElement).value) as DATA_DB;
+
+//---> Listener
+deleteButton.addEventListener("click", async (e)=>{
+  e.preventDefault();
+  deletePop(blogData.slug);
+});
+
+</script>

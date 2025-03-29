@@ -1,0 +1,82 @@
+---
+import BlogItemSmall from "@components/blog/BlogItemSmall.astro";
+import Pagination from "@components/Form/Pagination.astro";
+import Icon from "@components/Icon.astro";
+import PagePlate from "@layouts/PagePlate.astro";
+
+const breadCrumb = [
+  {
+    title: "Blogs",
+    url: null,
+  },
+];
+
+//Get page
+const page = parseInt(Astro.url.searchParams.get("page") || "1");
+
+const list = await fetch(Astro.url.origin+"/api/blog/list.json?page="+page);
+if(list.status != 200 || list.headers.get("content-type") !== "application/json"){
+  return Astro.redirect("/404")
+}
+const jsonContent = await list.json();
+const totalPage = jsonContent.totalPage;
+const data = jsonContent.data as DATA[];
+
+interface DATA{
+id:string|number,
+title:string,
+author:string,
+published:string,
+content_type:string,
+tags:string[],
+description:string,
+thumbnail:string,
+slug:string,
+status:string,
+created_at:string,
+updated_at:string,
+thumbnailSource:string,
+contentSource:string,
+}
+
+
+
+---
+<PagePlate title="list" breadCrumb={breadCrumb}>
+  <header class="mb-5">
+    <div class="flex gap-2">
+      <a href="/blog/create" class="btn btn-primary">
+        <Icon name="plus" outClass="size-5" /> Create New Content 
+      </a>
+    </div>
+  </header>
+  <main>
+
+    <div class="w-full  pt-8 pb-12 sm:pb-24">
+      <div class="">
+        <header class="mb-8">
+          <h3 class="h3">Content</h3>
+        </header>
+        <div class="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 auto-cols-max gap-5">
+          {data.map((d:DATA)=>{
+            return <BlogItemSmall 
+              title={d.title}
+              publishedDate={d.published}
+              description={d.description}
+              slug={d.slug}
+              status={d.status}
+            />
+          })}
+         
+        </div>
+      </div>
+    </div>
+
+  </main>
+  <aside class="flex justify-end">
+    <Pagination page={page} totalPages={totalPage} url={"/blog/list?page="} />
+  </aside>
+  <div class="my-20"></div>
+ 
+  
+</PagePlate> 

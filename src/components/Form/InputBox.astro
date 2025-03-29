@@ -1,0 +1,65 @@
+---
+import { capitalFirstOnly } from '@jsarmyknife/native--parse';
+import Input from './Input.astro';
+
+interface Props {
+  id?: string,
+  type?: astroHTML.JSX.HTMLInputTypeAttribute,
+  placeholder?:string,
+  required?:boolean,
+  display?: string,
+  aside?: string,
+  class?:string,
+  value?:string
+}
+
+const { class:className="",  id = "input-box", type="text", placeholder, required, display= "", aside="", value="" } = Astro.props;
+---
+<astro-input-box class={className}>
+  <div class=""> 
+    <label for={id} class={`label`}>
+      {display || capitalFirstOnly(id)} <span class=" font-light text-gray-500 text-xs">{aside}</span>
+    </label>
+    <Input 
+      id={id}
+      class='input-field-of-this-box peer'
+      placeholder={placeholder || " "}
+      required={required}
+      type={type}
+      value={value}
+    />
+    <input id={id+"-error"} type="hidden" class="error-field-of-this-box" />
+  </div>
+  <div class="w-full relative">
+    <div class="error-label"></div>
+  </div>
+
+</astro-input-box>
+
+
+<script>
+//---> Import
+import { ElementMaker } from "@jsarmyknife/native--dom";
+
+ElementMaker("astro-input-box", (element)=>{
+  if(element == null){
+    return;
+  }
+
+  //---> Const
+  const inputElement = element.querySelector(".input-field-of-this-box") as HTMLInputElement;
+  const errorElement = element.querySelector(".error-field-of-this-box") as HTMLInputElement;
+  const errorDisplay = element.querySelector(".error-label") as HTMLDivElement;
+
+  errorElement.addEventListener("input", ()=>{
+    if(errorElement.value.length > 0){
+      inputElement.classList.add("input-error");
+      errorDisplay.innerHTML = errorElement.value;
+    }else{
+      inputElement.classList.remove("input-error");
+      errorDisplay.innerHTML = "";
+    }
+  }, true);
+}, true);
+
+</script>

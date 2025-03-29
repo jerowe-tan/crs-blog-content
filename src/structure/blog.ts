@@ -1,0 +1,17 @@
+export interface DATA_DB{
+  id:string|number,
+  title:string,
+  author:string,
+  published:string,
+  content_type:string,
+  tags:string,
+  description:string,
+  thumbnail:string,
+  slug:string,
+  markdown_link:string,
+  status:string,
+  created_at:string,
+  updated_at:string,
+  thumbnailSource:string,
+  contentSource:string,
+  }

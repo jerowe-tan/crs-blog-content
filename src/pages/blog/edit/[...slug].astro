@@ -1,0 +1,313 @@
+---
+import ContentTypeSelection from "@components/Form/ContentTypeSelection.astro";
+import InputBox from "@components/Form/InputBox.astro";
+import StatusTypeSelection from "@components/Form/StatusTypeSelection.astro";
+import Icon from "@components/Icon.astro";
+import { DateNavigator, transformDate } from "@jsarmyknife/native--math";
+import PagePlate from "@layouts/PagePlate.astro";
+import '@toast-ui/editor/dist/toastui-editor.css';
+import type { DATA_DB } from "src/structure/blog";
+import { json } from "stream/consumers";
+
+//Get Params
+const { slug } = Astro.params;
+const responseMd = await fetch(Astro.url.origin+"/api/blog/"+slug+".md");
+const responseJson = await fetch(Astro.url.origin+"/api/blog/"+slug+".json");
+if(
+  responseMd.status != 200 || responseMd.headers.get("content-type") !== "text/markdown" || 
+  responseJson.status != 200 || responseJson.headers.get("content-type") !== "application/json"
+){
+  return Astro.redirect("/blog/list")
+}
+const markdownContent = await responseMd.text();
+const jsonContent = (await responseJson.json()).data as DATA_DB;
+
+//Breadcrumb
+const breadcrumb = [
+  {
+    title: "Blogs",
+    url: "/blog",
+  },
+  {
+    title: "Edit",
+    url: null,
+  },
+];
+---
+
+<PagePlate title="Edit" breadCrumb={breadcrumb}>
+  <input type="hidden" id="previous-data" value={JSON.stringify(jsonContent)} />
+  <input type="hidden" id="markdown-content" value={markdownContent} />
+  <h1 class="h1 mb-20">Content Editor</h1>
+  <main class="mt-5 mb-20">
+    <form id="blog-form">
+      <section class="mb-10 grid gap-x-2 md:grid-cols-2">
+        <InputBox
+          id="title"
+          placeholder="Enter the title of your blog post"
+          type="text"
+          required={true}
+          value={jsonContent.title}
+        />
+        <InputBox
+          id="author"
+          placeholder="Enter the author of your blog post"
+          type="text"
+          required={true}
+          value={jsonContent.author}
+        />
+        <InputBox
+          id="published"
+          type="date"
+          required={true}
+          value={transformDate(jsonContent.published, "yyyy-mm-dd")}
+        />
+        <div>
+          <label for="content-type" class="label">Content Type</label>
+          <ContentTypeSelection id="content-type" value={jsonContent.content_type} />
+        </div>
+
+        <div class=" mb-5">
+          <label for="tags" class="label">Tags</label>
+          <input id="tags" class="select" value={ JSON.parse(jsonContent.tags).join(", ") }></input>
+        </div>
+
+        <div class="mb-5">
+          <label for="status" class="label">Status</label>
+          <StatusTypeSelection id="status" value={ jsonContent.status } />
+        </div>
+
+        <div class=" md:col-span-2 mb-5">
+          <label for="description" class="label">Description</label>
+          <textarea id="description" class="input textarea-bordered h-24" placeholder="Enter a short description of your blog post" value={jsonContent.description}>{jsonContent.description}</textarea>
+        </div>
+
+        <div class=" md:col-span-2">
+          <label for="thumbnail" class="label">Thumbnail</label>
+          <input id="thumbnail" type="file" class="file" accept="image/*" />
+          <div id="image-preview">
+            <small class="font-light">Preview (16:9 Ratio)</small>
+            <div class="flex justify-center bg-gray-100">
+              <div class="w-96 aspect-video">
+                <img src={`/api/blog/thumbnail/${jsonContent.slug}` } alt="Thumbnail Preview" class="image !object-cover"></img>  
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        
+      </section>
+
+      <section>
+        <label class="label">Markdown Content Editor</label>
+        <div id="editor"></div>
+      </section>
+      
+      <section class="mt-10 flex justify-end gap-2">
+        <button id="delete-button" type="button" class="btn btn-error">Delete</button>
+        <button id="preview" type="button" class="btn">
+          <Icon name="eye" outClass="size-5" /> Blog Preview
+        </button>
+        <button id="update" type="submit" class="btn btn-primary">Update</button>
+      </section>
+    </form>
+  </main>
+</PagePlate>
+
+<script>
+//---> Import
+import Editor from '@toast-ui/editor';
+import Choices, { type InputChoice } from "choices.js";
+import "choices.js/public/assets/styles/choices.css";
+import {Modal} from "@jsarmyknife/native--pop"
+import { DOMPopTransformer, E } from '@jsarmyknife/native--dom';
+import { convertFileToBase64 } from '@jsarmyknife/native--file';
+import { actions } from 'astro:actions';
+import { transformDate } from '@jsarmyknife/native--math';
+import { navigate } from 'astro:transitions/client';
+import type { DATA_DB } from 'src/structure/blog';
+import { deletePop } from 'src/script/deletePop';
+
+//---> Constants
+//Elements
+const blogForm = document.getElementById("blog-form") as HTMLFormElement;
+const deleteButton = document.querySelector("#delete-button") as HTMLButtonElement;
+const editorContainer = document.getElementById("editor") as HTMLDivElement;
+const titleInput = document.getElementById("title") as HTMLInputElement;
+const authorInput = document.getElementById("author") as HTMLInputElement;
+const publishedInput = document.getElementById("published") as HTMLInputElement;
+const statusSelection = document.getElementById("status") as HTMLSelectElement;
+const descriptionInput = document.getElementById("description") as HTMLTextAreaElement;
+const thumbnailInput = document.getElementById("thumbnail") as HTMLInputElement;
+const imagePreview = document.getElementById("image-preview") as HTMLDivElement;
+const imagePreviewElement = imagePreview.querySelector("img") as HTMLImageElement;
+const contentTypeSelection = document.getElementById("content-type") as HTMLSelectElement;
+const tagsInput = document.getElementById("tags") as HTMLInputElement;
+const previewButton = document.getElementById("preview") as HTMLButtonElement;
+const updateButton = document.getElementById("update") as HTMLButtonElement;
+
+// Constant
+const previousData = JSON.parse((document.getElementById("previous-data") as HTMLInputElement).value) as DATA_DB;
+const markdownContent = (document.getElementById("markdown-content") as HTMLInputElement).value as string;
+
+//Editor
+const editorOptions = {
+  el: editorContainer,
+  initialEditType: 'markdown',
+  previewStyle: 'vertical',
+  height: '500px',
+  toolbarItems: [
+    ['heading', 'bold', 'italic'],
+    ['hr'],
+    ['ul', 'ol'],
+    ['table', 'image', 'link'],
+    ['code', 'codeblock'],
+    ['scrollSync'],
+  ],
+};
+const editor = new Editor({
+  ...editorOptions
+});
+//For Choices.js
+const tagsInputChoices = new Choices(tagsInput, {
+  addItems: true,
+  itemSelectText: "",
+  shouldSort: false,
+  removeItemButton: true,
+  duplicateItemsAllowed: false,
+  placeholder: true,
+  placeholderValue: "Input tags for this content.",
+  renderSelectedChoices: "always",
+});
+
+//---> On Load
+editor.setMarkdown(markdownContent);
+
+
+//---> Functions
+
+
+//---> Event Listeners
+//For Picture
+thumbnailInput.addEventListener("change", (e: Event) => {
+  const target = e.target as HTMLInputElement;
+  const file = target.files?.[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      imagePreviewElement.src = event.target?.result as string;
+      imagePreview.classList.remove("hidden");
+    };
+    reader.readAsDataURL(file);
+  } else {
+    imagePreview.classList.add("hidden");
+  }
+});
+
+//Event listener for editor
+editor.on('change', () => {
+  //Markdown
+  const content = editor.getMarkdown();
+
+  //HTML
+  const htmlContent = editor.getHTML();
+});
+
+//Event Listener for tags input
+(tagsInputChoices.passedElement.element.addEventListener as any)(
+  "choice",
+  (e:CustomEvent<{value:string}>) => {
+
+  }
+);
+
+//Event Listener for content type selection
+contentTypeSelection.addEventListener("change", (e: Event) => {
+  console.log(contentTypeSelection.value);
+});
+
+//Event Listener for published date
+publishedInput.addEventListener("input", (e: Event) => {
+  console.log(publishedInput.value);
+});
+
+//Event Listener for author input
+authorInput.addEventListener("input", (e: Event) => {
+  console.log(authorInput.value);
+});
+
+//Event Listener for title input
+titleInput.addEventListener("input", (e: Event) => {
+  console.log(titleInput.value);
+});
+
+//Event Listener for status selection
+statusSelection.addEventListener("change", (e: Event) => {
+  console.log(statusSelection.value);
+});
+
+//Event Listener for description input
+descriptionInput.addEventListener("input", (e: Event) => {
+  console.log(descriptionInput.value);
+});
+
+//Preview
+previewButton.addEventListener("click", (e: Event) => {
+  e.preventDefault();
+  // Prepare Modal
+  const contentModal = new Modal(DOMPopTransformer);
+  contentModal.type("custom").title("Preview").width("1500px").custom(E("div", { className:"px-5", id:"elementalist"}, 
+    `${editor.getHTML()}`
+  )).button("Close", false, true, true).run();
+});
+
+
+blogForm.addEventListener("submit", async (e)=>{
+  e.preventDefault();
+
+  //Prepare Payload for astro action
+  const payload = {
+    id: String(previousData.id),
+    slug: previousData.slug,
+    author: authorInput.value,
+    title: titleInput.value,
+    published: transformDate(new Date(publishedInput.value), "iso-extended"),
+    content: editor.getMarkdown() as string,
+    contentType: contentTypeSelection.value as "BLOG" | "ANNOUNCEMENT" | "MAINTENANCE" | "NEWS",
+    status: statusSelection.value as "DRAFT" | "PUBLISHED",
+    description: descriptionInput.value,
+    tags: typeof tagsInputChoices.getValue(true) === "string" ? [tagsInputChoices.getValue(true) as string] : tagsInputChoices.getValue(true) as string[],
+    thumbnail: thumbnailInput?.files?.[0] ? await convertFileToBase64(thumbnailInput.files[0] as File) : undefined,
+  }
+
+  //Prepare Loading Modal
+  const loadingPop = new Modal(DOMPopTransformer);
+  loadingPop.type("loading").title("Creating Blog Post").message("Please wait. . .").run();
+
+  const {data, error} = await actions.blog.update(payload);
+
+  if (error) {
+    const errorPop = new Modal(DOMPopTransformer);
+    errorPop.type("error").title("Error").message("An error occurred while creating the blog post.").button("Close", "Retry", true, true).run();
+    return;
+  }
+
+  const successPop = new Modal(DOMPopTransformer);
+  successPop.type("success").title("Success").message("Blog post updated successfully.").button("Close", "View Blog", true, true).callback(()=>{
+    navigate("/blog/edit/"+data.slug);
+  }, ()=>{
+    navigate(`/blog/${data.slug}`);
+  }, ()=>{
+    navigate("/blog/edit/"+data.slug);
+  }, ()=>{
+    navigate("/blog/edit/"+data.slug);
+  }).run();
+  
+});
+
+deleteButton.addEventListener("click", (e)=>{
+  e.preventDefault();
+  deletePop(previousData.slug);
+});
+
+</script>

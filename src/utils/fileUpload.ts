@@ -23,7 +23,10 @@ export async function streamToBuffer(stream: NodeJS.ReadableStream): Promise<Buf
   });
 }
 
-export async function getFile(key: string): Promise<Buffer> {
+export async function getFile(key: string): Promise<{
+  mimeType: string;
+  file: Buffer,
+}> {
   const command = new GetObjectCommand({ Bucket: bucket, Key: key });
   const response = await s3Client.send(command);
   const body = response.Body;
@@ -31,7 +34,10 @@ export async function getFile(key: string): Promise<Buffer> {
     throw new Error('File not found');
   }
   const stream = body as NodeJS.ReadableStream;
-  return await streamToBuffer(stream);
+  return {
+    mimeType: response.ContentType || 'application/octet-stream',
+    file: await streamToBuffer(stream),
+  }
 }
 
 export async function setFile(key: string, mimeType: string, file: File): Promise<void> {

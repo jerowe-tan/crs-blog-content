@@ -1,0 +1,45 @@
+---
+import CountryCodeField from './CountryCodeField.astro';
+
+interface Props {
+  id?: string,
+  class?:string,
+  inClass?:string,
+}
+const {id="mobile-number-field", class:className = "", inClass=""} = Astro.props;
+---
+
+<astro-mobile-number-field class={` ${className}`}>
+  <div class="flex">
+    <CountryCodeField id={id+"-country-code"} class="basis-48" inClass=" !border-r-0 !rounded-r-none" />
+    <input id={id} required class="input !rounded-l-none" placeholder="Ex. XXX" />
+  </div>
+</astro-mobile-number-field>  
+<script>
+//---> Imports
+import { ElementMaker } from "@jsarmyknife/native--dom";
+import { getCountryCode } from "@jsarmyknife/native--math";
+
+ElementMaker<{id:string}>("astro-mobile-number-field", (element)=>{
+  const input = element.querySelector("input") as HTMLInputElement;
+  const countryCodeField = (element.querySelector("astro-country-code-field") as HTMLElement)?.querySelector("select") as HTMLSelectElement;
+
+  if(input == null || countryCodeField == null) return;
+
+  input.addEventListener("input", (e: Event) => {
+    if(input.value.length > 1){
+      input.value = input.value.replace(/^0+/, '');
+    }
+  });
+
+
+  countryCodeField.addEventListener("change", (e: Event) => {
+    const target = e.target as HTMLSelectElement | null;
+    if (!target) return;
+    const selectedCountryCode = target.value;
+    const countryCode = getCountryCode(selectedCountryCode);
+    const maxLength = countryCode?.numberFormat?.max || 10
+    input.placeholder = `Ex. ${[...Array(maxLength)].map(() => "X").join("")}`;
+  });
+});
+</script>

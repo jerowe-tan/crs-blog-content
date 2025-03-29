@@ -1,0 +1,29 @@
+---
+interface Props {
+	id?:string,
+	name?:string,
+	class?:string,
+	error?:string,
+  value?:string,
+	[key:string]:any,
+}
+const {id="", name=id, class:className="", error="", value="", ...attributes} = Astro.props;
+---
+<input 
+  id={id} 
+	name={name} 
+	aria-label={`${id}`} 
+	class={`
+		input
+		${error?"input-error":""} 
+		${className}
+	`} 
+  aria-autocomplete="none" 
+  aria-haspopup="false" 
+  autocapitalize="off" 
+  autocomplete="off" 
+  spellcheck="true"  
+  autocorrect="off"
+  value={value}
+	{...attributes}
+/>

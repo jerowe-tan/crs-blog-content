@@ -1,0 +1,25 @@
+---
+interface Props {
+  id?:string,
+  class?:string,
+  value?:string,
+}
+const {id="content-type-selection", class:className="", value="BLOG"} = Astro.props;
+---
+
+<astro-content-type-selection class={className} value={value}>
+  <select id={id} class="select">
+    <option selected={value=="BLOG"} value="BLOG">
+      Blog
+    </option>
+    <option selected={value=="ANNOUNCEMENT"} value="ANNOUNCEMENT">
+      Announcement
+    </option>
+    <option selected={value=="MAINTENANCE"} value="MAINTENANCE">
+      Maintenance
+    </option>
+    <option selected={value=="NEWS"} value="NEWS">
+      News
+    </option>
+  </select>
+</astro-content-type-selection>

@@ -30,10 +30,19 @@
 }
 
 /* For Choices.js */
-@utility choices__inner{
+.choices__inner{
   @apply
-  !input !pb-2 !pt-2
+  !input !pb-1 !pt-2 !bg-transparent
   ;
+}
+
+.choices__input{
+  @apply !bg-transparent
+}
+
+/* For Toast UI Editor */
+.toastui-editor-defaultUI{
+  @apply !border-gray-500 !rounded-sm
 }
 
 @utility input-lg{

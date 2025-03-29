@@ -1,0 +1,50 @@
+---
+import {countryCodeList} from "@jsarmyknife/native--math";
+
+interface Props {
+  id?: string,
+  class?:string,
+  inClass?:string,
+}
+const {id="country-code", class:className = "", inClass=""} = Astro.props;
+---
+
+<astro-country-code-field  class={`flex ${className}`}>
+  <select id={id} class={`select ${inClass}`}>
+    {countryCodeList.map((countryCode) => {
+      if(countryCode.code === "PH"){
+        return <option value={countryCode.code} selected>({countryCode.dialCode}) {countryCode.code}</option>
+      }else{
+        return <option value={countryCode.code}>({countryCode.dialCode}) {countryCode.name}</option>
+      }
+    })}
+  </select>
+</astro-country-code-field>
+
+<script>
+import { ElementMaker } from "@jsarmyknife/native--dom";
+import { getCountryCode } from "@jsarmyknife/native--math";
+
+ElementMaker("astro-country-code-field", (element)=>{
+  const [select] = [element.querySelector("select")] as [HTMLSelectElement];
+
+  select.addEventListener("change", (e: Event) => {
+    const target = e.target as HTMLSelectElement | null;
+    if (!target) return;
+    const selectedCountryCode = target.value;
+    const countryCodeData = getCountryCode(selectedCountryCode);
+    if(!countryCodeData) return;
+    [...Array.from(select.children)].forEach((option) => {
+      const optionElement = option as HTMLOptionElement;
+      const countryCodeDataValue = getCountryCode(optionElement.value);
+      if(optionElement.value === selectedCountryCode){
+        optionElement.textContent = `(${countryCodeDataValue.dialCode}) ${countryCodeDataValue.code}`;
+      }else{
+        optionElement.textContent = `(${countryCodeDataValue.dialCode}) ${countryCodeDataValue.name}`;
+      }
+    });
+  });
+  
+  
+});
+</script>

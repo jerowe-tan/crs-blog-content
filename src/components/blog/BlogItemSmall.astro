@@ -1,0 +1,64 @@
+---
+import Icon from '@components/Icon.astro';
+import { transformDate } from '@jsarmyknife/native--math'
+import { capitalFirstOnly } from '@jsarmyknife/native--parse';
+
+interface Props {
+  slug: string,
+  publishedDate: string,
+  status: string,
+  title: string,
+  description: string,
+}
+const {slug, publishedDate, title, description, status } = Astro.props as Props;
+---
+
+<astro-blog-item-small class="card-2 flex flex-col">
+  <input type="hidden" id="data" value={JSON.stringify({
+    slug: slug,
+    publishedDate: publishedDate,
+    status: status,
+    title: title,
+    description: description,
+  })} />
+
+  <p class="text-gray-500 text-xs">{transformDate(publishedDate, "mnt, dd yyyy")} <span class=" font-semibold text-primary"> • {capitalFirstOnly(status)} </span></p>
+  <h4 class="h7 mb-3">{title}</h4>
+  <p>{description}</p>
+  
+  <div class="flex pt-5 mt-auto gap-2">
+    <a href={`/blog/${slug}`} class="btn-rounded !py-2">View</a>
+    <a href={`/blog/edit/${slug}`} class="btn-rounded btn-secondary !py-2">
+      <Icon name="edit" outClass="size-5" /> Edit
+    </a>
+    <button id="delete-button" class="btn-rounded btn-error !py-2">Delete</button>
+    
+  </div>
+</astro-blog-item-small>
+<script>
+//---> Import
+import { DOMPopTransformer, ElementMaker } from "@jsarmyknife/native--dom";
+import { deletePop } from "src/script/deletePop";
+
+ElementMaker("astro-blog-item-small", async (element)=>{
+  if(element == null)
+    return;
+  
+  //---> Constant
+  const deleteButton = element.querySelector("#delete-button") as HTMLButtonElement;
+  const blogData = JSON.parse((element.querySelector("#data") as HTMLInputElement).value) as {
+    slug: string,
+    publishedDate: string,
+    status: string,
+    title: string,
+    description: string,
+  }
+  
+  //---> Listener
+  deleteButton.addEventListener("click", async (e)=>{
+    e.preventDefault();
+    await deletePop(blogData.slug);
+  });
+
+}, true);
+</script>
