@@ -6,7 +6,10 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "check": "astro check",
+    "astro": "astro",
+    "wrangler-login": "wrangler login",
+    "wrangler-dev": "npx wrangler pages dev dist"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^12.3.1",
@@ -37,7 +40,10 @@
     "leaflet": "^1.9.4",
     "marked": "^15.0.7",
     "preline": "^2.7.0",
-    "wrangler": "^3.114.1"
+    "wrangler": "^3.114.1",
+    "sass": "^1.84.0",
+    "@astrojs/check": "^0.9.4",
+    "@floating-ui/dom": "^1.6.13"
   },
   "devDependencies": {
     "@types/google-maps": "^4.0.0",
