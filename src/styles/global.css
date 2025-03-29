@@ -1,0 +1,14 @@
+@import "tailwindcss";
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
+@import "./_typo.css";
+@import "./_buttons.css";
+@import "./_colors.css";
+@import "./_dialog.css";
+@import "./_cards.css";
+@import "./_forms.css";
+@import "./_layout.css";
+@import "./_badge.css";
+@import "./_blog.css";
+
+@import "./_component__vehicle-service-link.css";

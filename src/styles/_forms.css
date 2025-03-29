@@ -1,0 +1,171 @@
+@utility input{
+  @apply 
+  block 
+  px-4 py-3 w-full rounded-xs
+  bg-transparent border border-gray-500 
+  text-gray-900 text-sm 
+  enabled:text-gray-900 enabled:bg-transparent
+  disabled:text-gray-600 disabled:bg-zinc-100
+  focus:outline-(--color-primary)
+  focus:ring-0 focus:stroke-0
+  active:ring-0 active:stroke-0
+  ring-0 stroke-0
+  ;
+}
+
+@utility input-main{
+  @apply 
+  block 
+  px-3 py-4 w-full rounded-xs
+  bg-transparent border border-gray-500 
+  text-gray-900 text-sm 
+  enabled:text-gray-900 enabled:bg-transparent
+  disabled:text-gray-600 disabled:bg-zinc-100
+  focus:bg-transparent
+  focus:outline-(--color-primary)
+  focus:ring-0 focus:stroke-0
+  active:ring-0 active:stroke-0
+  ring-0 stroke-0
+  ;
+}
+
+/* For Choices.js */
+@utility choices__inner{
+  @apply
+  !input !pb-2 !pt-2
+  ;
+}
+
+@utility input-lg{
+  @apply
+  px-5 py-3 
+  text-base
+  ;
+}
+
+@utility input-error{
+  @apply
+  border border-(--color-red-primary) 
+  enabled:border-(--color-red-primary)
+  disabled:border-(--color-red-primary) disabled:text-(--color-red-primary) disabled:bg-zinc-100
+}
+@utility error-label{
+  @apply
+  block 
+  min-h-5
+  text-(--color-red-primary) text-xs 
+  ;
+}
+
+
+@utility label{
+  font-size: 14px;
+  @apply
+  block 
+  mb-2 
+ text-gray-900 
+  disabled:cursor-not-allowed disabled:text-gray-300
+ ;
+}
+
+/*
+||----> Selects
+*/
+@utility select {
+  padding-right: 1.4rem!important; /* Adjust to create space for the arrow */
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  /* Using CSS variables for dynamic arrow sizing */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='%23333' d='M4 6l4 4 4-4z'/%3E%3C/svg%3E");
+  background-size: 20px 20px;
+  background-repeat: no-repeat;
+  background-position: right 0.3rem center;
+  @apply input;
+  @apply focus:bg-gray-50;
+}
+
+
+/*
+||----> CheckBoxes
+*/
+@utility checkbox-primary{
+  @apply
+  size-4
+  rounded-xs
+  cursor-pointer
+  text-(--color-primary)
+  border border-gray-500 
+  focus:ring-(--color-primary-darker)  focus:ring-2 
+  disabled:text-gray-600 disabled:bg-zinc-100 disabled:cursor-not-allowed
+  ;
+  accent-color: orange;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  position: relative;
+  &:checked {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+  }
+  &:checked::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(45deg);
+    width: 0.25rem;
+    height: 0.5rem;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+  }
+}
+
+/*
+||----> RadioButtons
+*/
+@utility radio-primary{
+  @apply
+  size-4
+  rounded-full
+  cursor-pointer
+  text-(--color-primary)
+  border border-gray-500 
+  focus:ring-(--color-primary-darker)  focus:ring-2 
+  disabled:text-gray-600 disabled:bg-zinc-100 disabled:cursor-not-allowed
+  ;
+  accent-color: orange;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  position: relative;
+  &:checked {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+  }
+  &:checked::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 0.5rem;
+    height: 0.5rem;
+    background-color: white;
+    border-radius: 50%;
+  }
+}
+
+
+/*
+||----> Files
+*/
+@utility file{
+  @apply input;
+  @apply py-0 px-0 block;
+}
+.file::-webkit-file-upload-button, .file::file-selector-button {
+  @apply mr-4 px-4 py-2 rounded-md rounded-l rounded-r-none border-0 text-sm font-semibold bg-gray-200 cursor-pointer;
+  border: none;
+  margin-right: 0.5rem;
+}

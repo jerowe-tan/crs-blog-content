@@ -1,0 +1,37 @@
+/*Dialog & Pop-ups */
+.my-dialog::backdrop, .my-dialog{
+  backdrop-filter: blur(2px) brightness(.7) contrast(.80)!important;
+  -webkit-backdrop-filter: blur(5px) brightness(.4) contrast(.95)!important;
+}
+
+.my-dialog{
+  overscroll-behavior: 'contain'!important;
+  animation: slide-in-top 0.1s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  /*For Tailwind*/
+  @apply bg-white text-gray-900 rounded outline outline-gray-400/50 shadow shadow-gray-600/50;
+}
+
+dialog{
+  /* remove default dialog style */
+  border: none;
+  padding: 0;
+  margin: 0;
+
+ 
+}
+
+.my-spin {
+  animation: my-spin 1s linear 0s infinite;
+}
+@keyframes my-spin {
+  0% {
+    transform: rotate(0);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

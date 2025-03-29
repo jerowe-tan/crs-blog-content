@@ -1,0 +1,90 @@
+/* 
+//------> Since Tailwindcss 4 now runs only on css, we need to declare css here that will be use on script tag in the html file                       
+*/
+.to-include-class{
+  display: none!important;
+  @apply bg-gray-50 z-10 w-96;
+}
+
+/* 
+//------> Modification                       
+*/
+.container-crs{
+  @apply max-w-screen-xl w-full;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 .5rem 0 .5rem;
+}
+
+/*
+//------> Elements
+*/
+html, body{
+  @apply text-gray-900;
+  height: 100vh;
+}
+
+
+.h1{
+  @apply lg:text-8xl sm:text-7xl text-4xl font-semibold;
+}
+.h2{
+  @apply lg:text-6xl sm:text-5xl text-3xl font-semibold;
+}
+.h3{
+  @apply lg:text-5xl sm:text-4xl text-2xl font-semibold;
+}
+.h4{
+  @apply lg:text-5xl sm:text-4xl text-2xl font-light;
+}
+.h5{
+  @apply lg:text-4xl sm:text-3xl text-xl font-semibold;
+}
+.h6{
+  @apply lg:text-4xl sm:text-3xl text-xl font-light;
+}
+.h7{
+  @apply lg:text-3xl sm:text-2xl text-lg font-semibold;
+}
+.h8{
+  @apply lg:text-2xl sm:text-xl text-lg font-semibold;
+}
+
+
+/*
+//------> BG
+*/
+@utility card-box{
+  @apply bg-green-500;
+}
+
+
+/*
+//------> Gaps
+*/
+@utility space{
+  @apply my-3;
+}
+@utility space-lg{
+  @apply my-5;
+}
+@utility space-xl{
+  @apply my-8;
+}
+@utility space-2xl{
+  @apply my-12;
+}
+
+/*
+//------> Image
+*/
+@utility image{
+  @apply object-contain w-full h-full relative;
+}
+
+/*
+//------> Size
+*/
+@utility basis-120{
+  flex-basis: calc(var(--spacing) * 120);
+}

@@ -1,0 +1,8 @@
+@use "../base/variables" as var;
+@use "../base/fonts" as font;
+
+html,
+body {
+  background: var.$color-background;
+  font-family: "ToyotaType", sans-serif;
+}

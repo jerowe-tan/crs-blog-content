@@ -1,0 +1,24 @@
+@utility vehicle-service-link {
+  @apply
+    py-3
+    px-4
+    items-center
+    gap-x-2
+    -ms-px
+    first:rounded-s-lg
+    first:ms-0
+    last:rounded-e-lg
+    text-center
+    font-medium
+    focus:z-10
+    border
+    border-gray-200
+    bg-white
+    text-black
+    shadow-2xs
+    hover:bg-gray-50
+    focus:outline-hidden
+    focus:bg-gray-50
+    disabled:opacity-50
+    disabled:pointer-events-none;
+}

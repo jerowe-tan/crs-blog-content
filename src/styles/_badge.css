@@ -1,0 +1,3 @@
+@utility badge{
+  @apply rounded-full px-2 bg-white text-gray-800 text-xs;
+}

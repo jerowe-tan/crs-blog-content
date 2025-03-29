@@ -1,0 +1,4 @@
+/* Size */
+@utility text-2xs {
+  @apply text-[10px];
+}

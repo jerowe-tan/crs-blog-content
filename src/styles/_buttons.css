@@ -1,0 +1,120 @@
+
+@utility btn{
+  @apply flex items-center gap-2 justify-center
+  px-4 py-3 rounded
+  bg-gray-200 hover:bg-gray-300 text-gray-900
+  enabled:bg-gray-200 enabled:hover:bg-gray-300 enabled:text-gray-900
+  disabled:bg-gray-300 disabled:text-white
+  focus:outline-0 focus:ring-0 focus:stroke-0
+  active:outline-0 active:ring-0 active:stroke-0
+  outline-0 ring-0 stroke-0
+  font-medium text-center
+  cursor-pointer
+  ;
+}
+@utility btn-outline {
+  @apply flex items-center gap-2 justify-center
+  px-4 py-3 rounded
+  bg-transparent hover:bg-gray-300 text-gray-600 hover:text-gray-900 border border-gray-700
+  enabled:bg-transparent enabled:hover:bg-gray-300 enabled:text-gray-600 enabled:hover:text-gray-900 enabled:border enabled:border-gray-700
+  disabled:bg-transparent disabled:text-gray-300 disabled:border disabled:border-gray-700
+  focus:outline-0 focus:ring-0 focus:stroke-0
+  active:outline-0 active:ring-0 active:stroke-0
+  outline-0 ring-0 stroke-0
+  font-medium text-center
+  cursor-pointer
+  ;
+}
+
+@utility btn-rounded{
+  @apply flex items-center gap-2 justify-center
+  px-4 py-3 rounded-full
+  bg-gray-200 hover:bg-gray-300 text-gray-900
+  enabled:bg-gray-200 enabled:hover:bg-gray-300 enabled:text-gray-900
+  disabled:bg-gray-300 disabled:text-white
+  focus:outline-0 focus:ring-0 focus:stroke-0
+  active:outline-0 active:ring-0 active:stroke-0
+  outline-0 ring-0 stroke-0
+  font-medium text-center
+  cursor-pointer
+  ;
+}
+
+@utility btn-rounded-outline{
+  @apply flex items-center gap-2 justify-center
+  px-4 py-3 rounded-full
+  bg-transparent hover:bg-gray-300 text-gray-600 hover:text-gray-900 border border-gray-700
+  enabled:bg-transparent enabled:hover:bg-gray-300 enabled:text-gray-600 enabled:hover:text-gray-900 enabled:border enabled:border-gray-700
+  disabled:bg-transparent disabled:text-gray-300 disabled:border disabled:border-gray-700
+  focus:outline-0 focus:ring-0 focus:stroke-0
+  active:outline-0 active:ring-0 active:stroke-0
+  outline-0 ring-0 stroke-0
+  font-medium text-center
+  cursor-pointer
+  ;
+}
+@utility btn-xs {
+  @apply px-3 py-1 gap-[1px] text-xs rounded ;
+}
+@utility btn-sm {
+  @apply px-3 py-1 gap-1 rounded ;
+}
+
+@utility btn-lg {
+  @apply px-5 py-3 rounded;
+}
+
+@utility btn-wide {
+  @apply px-10;
+}
+
+@utility btn-default {
+  @apply bg-gray-200 hover:bg-gray-300 text-gray-900
+  enabled:bg-gray-200 enabled:hover:bg-gray-300 enabled:text-gray-900
+  disabled:bg-gray-300 disabled:text-white;
+}
+@utility btn-outline-default {
+  @apply bg-transparent hover:bg-gray-300 text-gray-600 hover:text-gray-900 border border-gray-700
+  enabled:bg-transparent enabled:hover:bg-gray-300 enabled:text-gray-600 enabled:hover:text-gray-900 enabled:border enabled:border-gray-700
+  disabled:bg-transparent disabled:text-gray-300 disabled:border disabled:border-gray-700;
+}
+
+@utility btn-primary {
+  @apply bg-(--color-primary) hover:bg-(--color-primary-darker) text-white
+  enabled:bg-(--color-primary) enabled:hover:bg-(--color-primary-darker) enabled:text-white
+  disabled:bg-gray-300 disabled:text-white;
+}
+
+@utility btn-outline-primary {
+  @apply bg-transparent hover:bg-(--color-primary) text-gray-900 border hover:text-white border-(--color-primary)
+  enabled:bg-transparent enabled:hover:bg-(--color-primary) enabled:text-(--color-primary) enabled:hover:text-white enabled:border enabled:border-(--color-primary)
+  disabled:bg-transparent disabled:text-gray-300 disabled:border disabled:border-gray-700;
+}
+
+@utility btn-secondary {
+  @apply bg-green-500 hover:bg-green-600 text-white
+  enabled:bg-green-500 enabled:hover:bg-green-600 enabled:text-white
+  disabled:bg-gray-300 disabled:text-white;
+}
+
+@utility btn-error {
+  @apply bg-(--color-red-primary) hover:bg-red-600 text-white
+  enabled:bg-(--color-red-primary) enabled:hover:bg-red-600 enabled:text-white
+  disabled:bg-gray-300 disabled:text-white;
+}
+@utility btn-outline-error {
+  @apply bg-transparent hover:bg-(--color-red-primary) text-(--color-red-primary) border border-(--color-red-primary)
+  enabled:bg-transparent enabled:hover:bg-(--color-red-primary) enabled:text-(--color-red-primary) enabled:border enabled:border-(--color-red-primary)
+  disabled:bg-transparent disabled:text-gray-300 disabled:border disabled:border-gray-700;
+}
+
+@utility btn-ghost {
+  @apply bg-transparent hover:bg-gray-200 text-gray-900
+  enabled:bg-transparent enabled:hover:bg-gray-200 enabled:text-gray-900
+  disabled:bg-transparent disabled:text-gray-300;
+}
+
+@utility btn-none {
+  color: currentColor;
+  @apply px-0 py-0 rounded-none bg-inherit hover:bg-inherit;
+}

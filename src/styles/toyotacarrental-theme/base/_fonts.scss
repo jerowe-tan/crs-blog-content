@@ -1,0 +1,71 @@
+/*---------------------------------------------------------------
+ * Copyright 2025 Toyota Mobility Solutions Philippines & Toyota Tsusho Mobility Informatics. All rights reserved.
+ * Author: Hassadee Pimsuwan
+ *-------------------------------------------------------------*/
+
+$path_font_toyota_type:  "/fonts/toyota-type/";
+$path_font_zen_kaku_gothic_antique: "https://cdn.tmsph.app/fonts/zen-kaku-gothic-antique/";
+
+@font-face {
+  font-family: "ZenKakuGothicAntique";
+  src: url("#{$path_font_zen_kaku_gothic_antique}ZenKakuGothicAntique-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "ZenKakuGothicAntique";
+  src: url("#{$path_font_zen_kaku_gothic_antique}ZenKakuGothicAntique-Bold.ttf") format("truetype");
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "ZenKakuGothicAntique";
+  src: url("#{$path_font_zen_kaku_gothic_antique}ZenKakuGothicAntique-Medium.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "ToyotaType";
+  src: url("#{$path_font_toyota_type}ToyotaType-Bold.woff2") format("woff2");
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "ToyotaType";
+  src: url("#{$path_font_toyota_type}ToyotaType-Semibold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "ToyotaType";
+  src: url("#{$path_font_toyota_type}ToyotaType-Regular.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "ToyotaType";
+  src: url("#{$path_font_toyota_type}ToyotaType-Light.woff2") format("woff2");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "ToyotaType";
+  src: url("#{$path_font_toyota_type}ToyotaType-Italic.woff2") format("woff2");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}

@@ -1,0 +1,42 @@
+:root {
+  --color-primary: #ff751a;
+  --color-primary-darker: #d15c0d;
+  --color-red-primary: #e10a1d;
+}
+
+/* For Background */
+@utility bg-default{
+  @apply 
+  bg-gray-200
+  enabled:bg-gray-200
+  disabled:bg-gray-300;
+}
+
+@utility bg-primary{
+  @apply 
+  bg-(--color-primary)
+  enabled:bg-(--color-primary) 
+  disabled:bg-gray-300;
+}
+
+@utility bg-secondary{
+  @apply 
+  bg-green-500
+  enabled:bg-green-500 
+  disabled:bg-gray-300;
+}
+
+/* For Text */
+@utility text-primary{
+  @apply 
+  text-(--color-primary) 
+  enabled:text-(--color-primary)
+  disabled:text-gray-300;
+}
+
+@utility text-red-primary{
+  @apply 
+  text-(--color-red-primary) 
+  enabled:text-(--color-red-primary)
+  disabled:text-gray-300;
+}
