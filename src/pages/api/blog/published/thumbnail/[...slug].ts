@@ -15,6 +15,7 @@ export const GET:APIRoute = async ({cookies, url, params})=>{
     });
   }
 
+
   // Fetch the blog post from the database
   const blog = await getBlogPublished(slug);
   if(blog.rows.length == 0){

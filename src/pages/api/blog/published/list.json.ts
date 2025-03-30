@@ -14,7 +14,7 @@ export const GET:APIRoute = async ({cookies, url, params})=>{
   const rowData = blog;
 
   for(let i = 0; i < rowData.data.length; i++){
-    const thumbnailFile = `${url.host}/api/published/thumbnail/${rowData.data[i].slug}`;
+    const thumbnailFile = `${url.host}/api/blog/published/thumbnail/${rowData.data[i].slug}`;
     const blogFile = `${url.host}/api/published/api/blog/${rowData.data[i].slug}`;
     rowData.data[i].thumbnailSource = thumbnailFile;
     rowData.data[i].contentSource = blogFile;
