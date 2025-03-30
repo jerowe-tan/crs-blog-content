@@ -1,4 +1,3 @@
-import { Buffer } from 'node:buffer';
 import { S3Client, GetObjectCommand, PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
 
 
@@ -15,17 +14,29 @@ export const s3Client = new S3Client({
 });
 
 // A helper to convert a stream to a Buffer, useful for getFile.
-export async function streamToBuffer(stream: NodeJS.ReadableStream): Promise<Buffer> {
-  const chunks: Buffer[] = [];
-  for await (const chunk of stream) {
-    chunks.push(typeof chunk === "string" ? Buffer.from(chunk) : chunk);
+export async function streamToBuffer(
+  stream: ReadableStream|ReadableStream<Uint8Array>
+): Promise<Uint8Array> {
+  const reader = stream.getReader();
+  const chunks: Uint8Array[] = [];
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    if (value) chunks.push(value);
   }
-  return Buffer.concat(chunks);
+  const length = chunks.reduce((sum, chunk) => sum + chunk.length, 0);
+  const result = new Uint8Array(length);
+  let offset = 0;
+  for (const chunk of chunks) {
+    result.set(chunk, offset);
+    offset += chunk.length;
+  }
+  return result;
 }
 
 export async function getFile(key: string): Promise<{
   mimeType: string;
-  file: Buffer,
+  file: Uint8Array<ArrayBufferLike>,
 }> {
   const command = new GetObjectCommand({ Bucket: bucket, Key: key });
   console.log("COMMAND", command);
@@ -35,7 +46,7 @@ export async function getFile(key: string): Promise<{
   if (!body) {
     throw new Error('File not found');
   }
-  const stream = body as NodeJS.ReadableStream;
+  const stream = body as ReadableStream;
   console.log("STREAM", stream);
   const buffer = await streamToBuffer(stream);
   console.log("BUFFER", buffer);
