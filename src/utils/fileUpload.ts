@@ -1,3 +1,4 @@
+import { Buffer } from 'buffer';
 import { S3Client, GetObjectCommand, PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
 
 
