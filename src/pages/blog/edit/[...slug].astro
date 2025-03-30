@@ -181,7 +181,7 @@ import { transformDate } from '@jsarmyknife/native--math';
 import { navigate } from 'astro:transitions/client';
 import type { DATA_DB } from 'src/structure/blog';
 import { deletePop } from 'src/script/deletePop';
-import { ApiSuggestBlogTitle } from 'src/script/clientApi';
+import { ApiSuggestBlogContent, ApiSuggestBlogDescription, ApiSuggestBlogTags, ApiSuggestBlogTitle } from 'src/script/clientApi';
 
 //---> Constants
 //Elements
@@ -269,7 +269,7 @@ function canAiGenerateContent(){
 
   //Also Include Old Content
   if(editor.getMarkdown().length > 0){
-    prompt += "Old Content: "+editor.getValue().substring(0, 100)+" \n";
+    prompt += "Old Content: " + editor.getHTML().replace(/<\/?[^>]+(>|$)/g, "").substring(0, 100) + " \n";
   }
 
   if(prompt !== ""){
@@ -299,7 +299,7 @@ function canAiGenerateTitle(){
 
   //Check Content, Get the first 100 characters and also remove markdown or html only raw text or better just get the rawText
   if(editor.getMarkdown().length > 0){
-    prompt += "Content: "+editor.getValue().substring(0, 100)+" \n";
+    prompt += "Content: "+editor.getHTML().replace(/<\/?[^>]+(>|$)/g, "").substring(0, 100)+" \n";
   }
 
   //Also Include Old Title
@@ -334,7 +334,7 @@ function canAiGenerateTags(){
 
   //Check Content, Get the first 100 characters and also remove markdown or html only raw text or better just get the rawText
   if(editor.getMarkdown().length > 0){
-    prompt += "Content: "+editor.getValue().substring(0, 100)+" \n";
+    prompt += "Content: "+editor.getHTML().replace(/<\/?[^>]+(>|$)/g, "").substring(0, 100)+" \n";
   }
 
   //Also Include Old Tags
@@ -369,7 +369,7 @@ function canAiGenerateDescription(){
 
   //Check Content, Get the first 100 characters and also remove markdown or html only raw text or better just get the rawText
   if(editor.getMarkdown().length > 0){
-    prompt += "Content: "+editor.getValue().substring(0, 100)+" \n";
+    prompt += "Content: "+editor.getHTML().replace(/<\/?[^>]+(>|$)/g, "").substring(0, 100)+" \n";
   }
 
   //Also Include Old Description
@@ -534,12 +534,12 @@ aiGenerateTitleButton.addEventListener("click", async (e)=>{
   
   //Fetch Here Later
   await ApiSuggestBlogTitle(prompt).stream((reader)=>{
+    titleInput.value = ""; //Clear the title input
     reader((data)=>{
-      const decodedString = JSON.parse(new TextDecoder().decode(data).replace("data: ", ""))[0];
-
-      titleInput.value += decodedString.title;
+      const decodedString = JSON.parse(data);
+      titleInput.value += decodedString.response;
     });
-  })
+  }, true);
 
   btnContent.textContent = "Generate";
   aiGenerateTitleButton.disabled = false;
@@ -556,7 +556,10 @@ aiGenerateTagButton.addEventListener("click", async (e)=>{
   aiGenerateTagButton.disabled = true;
   
   //Fetch Here Later
-
+  await ApiSuggestBlogTags(prompt).s200((data:string)=>{
+    tagsInputChoices.clearStore();
+    tagsInputChoices.setValue( JSON.parse(`[${data}]`) );
+  }).promiseResponse;
 
   btnContent.textContent = "Generate";
   aiGenerateTagButton.disabled = false;
@@ -573,6 +576,13 @@ aiGenerateDescriptionButton.addEventListener("click", async (e)=>{
   aiGenerateDescriptionButton.disabled = true;
   
   //Fetch Here Later
+  await ApiSuggestBlogDescription(prompt).stream((reader)=>{
+    descriptionInput.value = "";
+    reader((data)=>{
+      const decodedString = JSON.parse(data);
+      descriptionInput.value += decodedString.response;
+    });
+  }, true);
 
 
   btnContent.textContent = "Generate";
@@ -590,7 +600,15 @@ aiGenerateContentButton.addEventListener("click", async (e)=>{
   aiGenerateContentButton.disabled = true;
   
   //Fetch Here Later
-
+  await ApiSuggestBlogContent(prompt).stream((reader)=>{
+    editor.getMarkdown("");
+    let markdownCached = "";
+    reader((data)=>{
+      const decodedString = JSON.parse(data);
+      markdownCached += decodedString.response;
+      editor.setMarkdown(markdownCached);
+    });
+  }, true);
 
   btnContent.textContent = "Generate";
   aiGenerateContentButton.disabled = false;
