@@ -27,8 +27,8 @@ export const GET:APIRoute = async ({cookies, url, params})=>{
   }
 
   const data = blog.rows[0] as unknown as DATA_DB;
-  data.thumbnailSource = `${url.protocol}//${url.hostname}/api/blog/thumbnail/${data}`;
-  data.contentSource = `${url.protocol}//${url.hostname}/api/blog/${data}`;
+  data.thumbnailSource = `${url.protocol}//${url.host}/api/blog/published/thumbnail/${data.slug}`;
+  data.contentSource = `${url.protocol}//${url.host}/api/blog/published/${data.slug}`;
 
   return new Response(JSON.stringify({status:"success", data}), {
     status: 200,
