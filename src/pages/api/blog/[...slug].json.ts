@@ -1,5 +1,6 @@
 import { getBlog } from "@model/blog";
 import type { APIRoute } from "astro";
+import type { DATA_DB } from "src/structure/blog";
 
 
 export const GET:APIRoute = async ({cookies, url, params})=>{
@@ -25,7 +26,11 @@ export const GET:APIRoute = async ({cookies, url, params})=>{
     });
   }
 
-  return new Response(JSON.stringify({status:"success", data: blog.rows[0]}), {
+  const data = blog.rows[0] as unknown as DATA_DB;
+  data.thumbnailSource = `${url.protocol}//${url.hostname}/api/blog/thumbnail/${data}`;
+  data.contentSource = `${url.protocol}//${url.hostname}/api/blog/${data}`;
+
+  return new Response(JSON.stringify({status:"success", data}), {
     status: 200,
     headers: {
       "Content-Type": "application/json",
