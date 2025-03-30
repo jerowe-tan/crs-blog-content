@@ -15,9 +15,26 @@ export const s3Client = new S3Client({
 
 // A helper to convert a stream to a Buffer, useful for getFile.
 export async function streamToBuffer(
-  stream: ReadableStream|ReadableStream<Uint8Array>
+  stream: NodeJS.ReadableStream|ReadableStream|ReadableStream<Uint8Array>
 ): Promise<Uint8Array> {
-  const reader = stream.getReader();
+
+  let reader: ReadableStreamDefaultReader<Uint8Array>;
+  if (typeof (stream as any).getReader === 'function') {
+    // Handle web streams (ReadableStream or ReadableStream<Uint8Array>)
+    reader = (stream as ReadableStream).getReader();
+  } else {
+    // Handle NodeJS.ReadableStream by converting it to a Web ReadableStream
+    const webStream = new ReadableStream<Uint8Array>({
+      start(controller) {
+        (stream as NodeJS.ReadableStream).on('data', (chunk: Buffer) => {
+          controller.enqueue(new Uint8Array(chunk));
+        });
+        (stream as NodeJS.ReadableStream).on('error', (err: Error) => controller.error(err));
+        (stream as NodeJS.ReadableStream).on('end', () => controller.close());
+      }
+    });
+    reader = webStream.getReader();
+  }
   const chunks: Uint8Array[] = [];
   while (true) {
     const { done, value } = await reader.read();
@@ -39,17 +56,13 @@ export async function getFile(key: string): Promise<{
   file: Uint8Array<ArrayBufferLike>,
 }> {
   const command = new GetObjectCommand({ Bucket: bucket, Key: key });
-  console.log("COMMAND", command);
   const response = await s3Client.send(command);
-  console.log("RESPONSE", response);
   const body = response.Body;
   if (!body) {
     throw new Error('File not found');
   }
   const stream = body as ReadableStream;
-  console.log("STREAM", stream);
   const buffer = await streamToBuffer(stream);
-  console.log("BUFFER", buffer);
   return {
     mimeType: response.ContentType || 'application/octet-stream',
     file: buffer,

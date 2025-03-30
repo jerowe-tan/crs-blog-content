@@ -1,5 +1,6 @@
 ---
 import ContentTypeSelection from "@components/Form/ContentTypeSelection.astro";
+import Input from "@components/Form/Input.astro";
 import InputBox from "@components/Form/InputBox.astro";
 import StatusTypeSelection from "@components/Form/StatusTypeSelection.astro";
 import Icon from "@components/Icon.astro";
@@ -7,7 +8,6 @@ import { DateNavigator, transformDate } from "@jsarmyknife/native--math";
 import PagePlate from "@layouts/PagePlate.astro";
 import '@toast-ui/editor/dist/toastui-editor.css';
 import type { DATA_DB } from "src/structure/blog";
-import { json } from "stream/consumers";
 
 //Get Params
 const { slug } = Astro.params;
@@ -42,14 +42,31 @@ const breadcrumb = [
   <main class="mt-5 mb-20">
     <form id="blog-form">
       <section class="mb-10 grid gap-x-2 md:grid-cols-2">
+
+        <div class="lg:col-span-1 col-span-2">
+          <div class="flex items-center gap-2">
+            <label for="title" class="label">Title</label>
+            <button id="ai-generate-title-button" type="button" class="shrink-0 btn btn-xs h-fit -translate-y-1" disabled >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M7.5 2L9.09 6.26H13.91L8.91 9.74L10.5 14L7.5 10.27L4.5 14L6.09 9.74L1.09 6.26H5.91L7.5 2Z" fill="currentColor"/>
+                <circle cx="17" cy="7" r="2" fill="currentColor"/>
+                <circle cx="20" cy="17" r="2" fill="currentColor"/>
+                <circle cx="12" cy="19" r="2" fill="currentColor"/>
+              </svg>
+              <span>Generate</span>
+            </button>
+          </div>
+          <Input
+            id="title"
+            placeholder="Enter the title of your blog post"
+            type="text"
+            required={true}
+            class="basis-full"
+            value={jsonContent.title}
+          />
+        </div>
         <InputBox
-          id="title"
-          placeholder="Enter the title of your blog post"
-          type="text"
-          required={true}
-          value={jsonContent.title}
-        />
-        <InputBox
+          class="lg:col-span-1 col-span-2"
           id="author"
           placeholder="Enter the author of your blog post"
           type="text"
@@ -57,32 +74,58 @@ const breadcrumb = [
           value={jsonContent.author}
         />
         <InputBox
+          class="md:col-span-1 col-span-2"
           id="published"
           type="date"
           required={true}
           value={transformDate(jsonContent.published, "yyyy-mm-dd")}
         />
-        <div>
+        <div class="md:col-span-1 col-span-2 mb-5">
           <label for="content-type" class="label">Content Type</label>
           <ContentTypeSelection id="content-type" value={jsonContent.content_type} />
         </div>
 
-        <div class=" mb-5">
-          <label for="tags" class="label">Tags</label>
-          <input id="tags" class="select" value={ JSON.parse(jsonContent.tags).join(", ") }></input>
+        <div class=" mb-5 md:col-span-1 col-span-2">
+          <div class="flex gap-2 items-center">
+            <label for="tags" class="label">Tags</label>
+            <button id="ai-generate-tag-button" type="button" class="shrink-0 btn btn-xs h-fit -translate-y-1" disabled >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M7.5 2L9.09 6.26H13.91L8.91 9.74L10.5 14L7.5 10.27L4.5 14L6.09 9.74L1.09 6.26H5.91L7.5 2Z" fill="currentColor"/>
+                <circle cx="17" cy="7" r="2" fill="currentColor"/>
+                <circle cx="20" cy="17" r="2" fill="currentColor"/>
+                <circle cx="12" cy="19" r="2" fill="currentColor"/>
+              </svg>
+              <span>Generate</span>
+            </button>
+          </div>
+          <div class="basis-full">
+            <input id="tags" class="select" value={ JSON.parse(jsonContent.tags).join(", ") }></input>
+          </div>
         </div>
 
-        <div class="mb-5">
+        <div class="mb-5 md:col-span-1 col-span-2">
           <label for="status" class="label">Status</label>
           <StatusTypeSelection id="status" value={ jsonContent.status } />
         </div>
 
-        <div class=" md:col-span-2 mb-5">
-          <label for="description" class="label">Description</label>
+        <div class=" col-span-2 mb-5">
+          <div class="flex gap-2 items-center">
+            <label for="description" class="label">Description</label>
+            <button id="ai-generate-description-button" type="button" class="shrink-0 btn btn-xs h-fit mb-1" >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M7.5 2L9.09 6.26H13.91L8.91 9.74L10.5 14L7.5 10.27L4.5 14L6.09 9.74L1.09 6.26H5.91L7.5 2Z" fill="currentColor"/>
+                <circle cx="17" cy="7" r="2" fill="currentColor"/>
+                <circle cx="20" cy="17" r="2" fill="currentColor"/>
+                <circle cx="12" cy="19" r="2" fill="currentColor"/>
+              </svg>
+              <span>Generate</span>
+            </button>
+          </div>
+          
           <textarea id="description" class="input textarea-bordered h-24" placeholder="Enter a short description of your blog post" value={jsonContent.description}>{jsonContent.description}</textarea>
         </div>
 
-        <div class=" md:col-span-2">
+        <div class="col-span-2">
           <label for="thumbnail" class="label">Thumbnail</label>
           <input id="thumbnail" type="file" class="file" accept="image/*" />
           <div id="image-preview">
@@ -99,7 +142,18 @@ const breadcrumb = [
       </section>
 
       <section>
-        <label class="label">Markdown Content Editor</label>
+        <div class="flex gap-2 items-center">
+          <label class="label">Markdown Content Editor</label>
+          <button id="ai-generate-content-button" type="button" class="shrink-0 btn btn-xs h-fit mb-1" >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M7.5 2L9.09 6.26H13.91L8.91 9.74L10.5 14L7.5 10.27L4.5 14L6.09 9.74L1.09 6.26H5.91L7.5 2Z" fill="currentColor"/>
+              <circle cx="17" cy="7" r="2" fill="currentColor"/>
+              <circle cx="20" cy="17" r="2" fill="currentColor"/>
+              <circle cx="12" cy="19" r="2" fill="currentColor"/>
+            </svg>
+            <span>Generate</span>
+          </button>
+        </div>
         <div id="editor"></div>
       </section>
       
@@ -127,6 +181,7 @@ import { transformDate } from '@jsarmyknife/native--math';
 import { navigate } from 'astro:transitions/client';
 import type { DATA_DB } from 'src/structure/blog';
 import { deletePop } from 'src/script/deletePop';
+import { ApiSuggestBlogTitle } from 'src/script/clientApi';
 
 //---> Constants
 //Elements
@@ -145,6 +200,11 @@ const contentTypeSelection = document.getElementById("content-type") as HTMLSele
 const tagsInput = document.getElementById("tags") as HTMLInputElement;
 const previewButton = document.getElementById("preview") as HTMLButtonElement;
 const updateButton = document.getElementById("update") as HTMLButtonElement;
+
+const aiGenerateTitleButton = document.getElementById("ai-generate-title-button") as HTMLButtonElement;
+const aiGenerateTagButton = document.getElementById("ai-generate-tag-button") as HTMLButtonElement;
+const aiGenerateDescriptionButton = document.getElementById("ai-generate-description-button") as HTMLButtonElement;
+const aiGenerateContentButton = document.getElementById("ai-generate-content-button") as HTMLButtonElement;
 
 // Constant
 const previousData = JSON.parse((document.getElementById("previous-data") as HTMLInputElement).value) as DATA_DB;
@@ -185,7 +245,145 @@ editor.setMarkdown(markdownContent);
 
 
 //---> Functions
+function canAiGenerateContent(){
+  const btnContent = aiGenerateContentButton.querySelector("span") as HTMLSpanElement;
+  if(btnContent.textContent === "Generating..."){
+    return "";
+  }
+  let prompt = "";
+  
+  //Check title
+  if(titleInput.value.length > 0){
+    prompt += "Title: "+titleInput.value+" \n";
+  }
 
+  //Check Tags
+  if(tagsInputChoices.getValue(true).length > 0){
+    prompt += "Tags: "+(typeof tagsInputChoices.getValue(true) === "string" ? tagsInputChoices.getValue(true) : (tagsInputChoices.getValue(true) as string[]).join(", "))+" \n";
+  }
+
+  //Check Description
+  if(descriptionInput.value.length > 0){
+    prompt += "Description: "+descriptionInput.value+" \n";
+  }
+
+  //Also Include Old Content
+  if(editor.getMarkdown().length > 0){
+    prompt += "Old Content: "+editor.getValue().substring(0, 100)+" \n";
+  }
+
+  if(prompt !== ""){
+    aiGenerateContentButton.disabled = false;
+  }else{
+    aiGenerateContentButton.disabled = true;
+  }
+  return prompt;
+}
+
+function canAiGenerateTitle(){
+  const btnContent = aiGenerateTitleButton.querySelector("span") as HTMLSpanElement;
+  if(btnContent.textContent === "Generating..."){
+    return "";
+  }
+  let prompt = "";
+  
+  //Check Tags
+  if(tagsInputChoices.getValue(true).length > 0){
+    prompt += "Tags: "+(typeof tagsInputChoices.getValue(true) === "string" ? tagsInputChoices.getValue(true) : (tagsInputChoices.getValue(true) as string[]).join(", "))+" \n";
+  }
+
+  //Check Description
+  if(descriptionInput.value.length > 0){
+    prompt += "Description: "+descriptionInput.value+" \n";
+  }
+
+  //Check Content, Get the first 100 characters and also remove markdown or html only raw text or better just get the rawText
+  if(editor.getMarkdown().length > 0){
+    prompt += "Content: "+editor.getValue().substring(0, 100)+" \n";
+  }
+
+  //Also Include Old Title
+  if(titleInput.value.length > 0){
+    prompt += "Old Title: "+titleInput.value+" \n";
+  }
+
+  if(prompt !== ""){
+    aiGenerateTitleButton.disabled = false;
+  }else{
+    aiGenerateTitleButton.disabled = true;
+  }
+  return prompt;
+}
+
+function canAiGenerateTags(){
+  const btnContent = aiGenerateTagButton.querySelector("span") as HTMLSpanElement;
+  if(btnContent.textContent === "Generating..."){
+    return "";
+  }
+  let prompt = "";
+  
+  //Check title
+  if(titleInput.value.length > 0){
+    prompt += "Title: "+titleInput.value+" \n";
+  }
+
+  //Check Description
+  if(descriptionInput.value.length > 0){
+    prompt += "Description: "+descriptionInput.value+" \n";
+  }
+
+  //Check Content, Get the first 100 characters and also remove markdown or html only raw text or better just get the rawText
+  if(editor.getMarkdown().length > 0){
+    prompt += "Content: "+editor.getValue().substring(0, 100)+" \n";
+  }
+
+  //Also Include Old Tags
+  if(tagsInputChoices.getValue(true).length > 0){
+    prompt += "Old Tags: "+(typeof tagsInputChoices.getValue(true) === "string" ? tagsInputChoices.getValue(true) : (tagsInputChoices.getValue(true) as string[]).join(", "))+" \n";
+  }
+
+  if(prompt !== ""){
+    aiGenerateTagButton.disabled = false;
+  }else{
+    aiGenerateTagButton.disabled = true;
+  }
+  return prompt;
+}
+
+function canAiGenerateDescription(){
+  const btnContent = aiGenerateDescriptionButton.querySelector("span") as HTMLSpanElement;
+  if(btnContent.textContent === "Generating..."){
+    return "";
+  }
+  let prompt = "";
+  
+  //Check title
+  if(titleInput.value.length > 0){
+    prompt += "Title: "+titleInput.value+" \n";
+  }
+
+  //Check Tags
+  if(tagsInputChoices.getValue(true).length > 0){
+    prompt += "Tags: "+(typeof tagsInputChoices.getValue(true) === "string" ? tagsInputChoices.getValue(true) : (tagsInputChoices.getValue(true) as string[]).join(", "))+" \n";
+  }
+
+  //Check Content, Get the first 100 characters and also remove markdown or html only raw text or better just get the rawText
+  if(editor.getMarkdown().length > 0){
+    prompt += "Content: "+editor.getValue().substring(0, 100)+" \n";
+  }
+
+  //Also Include Old Description
+  if(descriptionInput.value.length > 0){
+    prompt += "Old Description: "+descriptionInput.value+" \n";
+  }
+
+  if(prompt !== ""){
+    aiGenerateDescriptionButton.disabled = false;
+  }else{
+    aiGenerateDescriptionButton.disabled = true;
+  }
+  return prompt;
+}
 
 //---> Event Listeners
 //For Picture
@@ -211,13 +409,21 @@ editor.on('change', () => {
 
   //HTML
   const htmlContent = editor.getHTML();
+
+  canAiGenerateTitle();
+  canAiGenerateDescription();
+  canAiGenerateTags();
+  canAiGenerateContent();
 });
 
 //Event Listener for tags input
 (tagsInputChoices.passedElement.element.addEventListener as any)(
   "choice",
   (e:CustomEvent<{value:string}>) => {
-
+    canAiGenerateDescription();
+    canAiGenerateContent();
+    canAiGenerateTitle();
+    canAiGenerateTags();
   }
 );
 
@@ -238,7 +444,10 @@ authorInput.addEventListener("input", (e: Event) => {
 
 //Event Listener for title input
 titleInput.addEventListener("input", (e: Event) => {
-  console.log(titleInput.value);
+  canAiGenerateContent();
+  canAiGenerateDescription();
+  canAiGenerateTags();
+  canAiGenerateTitle();
 });
 
 //Event Listener for status selection
@@ -248,7 +457,10 @@ statusSelection.addEventListener("change", (e: Event) => {
 
 //Event Listener for description input
 descriptionInput.addEventListener("input", (e: Event) => {
-  console.log(descriptionInput.value);
+  canAiGenerateContent();
+  canAiGenerateTitle();
+  canAiGenerateTags();
+  canAiGenerateDescription();
 });
 
 //Preview
@@ -308,6 +520,80 @@ blogForm.addEventListener("submit", async (e)=>{
 deleteButton.addEventListener("click", (e)=>{
   e.preventDefault();
   deletePop(previousData.slug);
+});
+
+aiGenerateTitleButton.addEventListener("click", async (e)=>{
+  e.preventDefault();
+  const prompt = canAiGenerateTitle();
+  if(prompt === ""){
+    return;
+  }
+  const btnContent = aiGenerateTitleButton.querySelector("span") as HTMLSpanElement;
+  btnContent.textContent = "Generating...";
+  aiGenerateTitleButton.disabled = true;
+  
+  //Fetch Here Later
+  await ApiSuggestBlogTitle(prompt).stream((reader)=>{
+    reader((data)=>{
+      const decodedString = JSON.parse(new TextDecoder().decode(data).replace("data: ", ""))[0];
+
+      titleInput.value += decodedString.title;
+    });
+  })
+
+  btnContent.textContent = "Generate";
+  aiGenerateTitleButton.disabled = false;
+});
+
+aiGenerateTagButton.addEventListener("click", async (e)=>{
+  e.preventDefault();
+  const prompt = canAiGenerateTags();
+  if(prompt === ""){
+    return;
+  }
+  const btnContent = aiGenerateTagButton.querySelector("span") as HTMLSpanElement;
+  btnContent.textContent = "Generating...";
+  aiGenerateTagButton.disabled = true;
+  
+  //Fetch Here Later
+
+
+  btnContent.textContent = "Generate";
+  aiGenerateTagButton.disabled = false;
+});
+
+aiGenerateDescriptionButton.addEventListener("click", async (e)=>{
+  e.preventDefault();
+  const prompt = canAiGenerateDescription();
+  if(prompt === ""){
+    return;
+  }
+  const btnContent = aiGenerateDescriptionButton.querySelector("span") as HTMLSpanElement;
+  btnContent.textContent = "Generating...";
+  aiGenerateDescriptionButton.disabled = true;
+  
+  //Fetch Here Later
+
+
+  btnContent.textContent = "Generate";
+  aiGenerateDescriptionButton.disabled = false;
+});
+
+aiGenerateContentButton.addEventListener("click", async (e)=>{
+  e.preventDefault();
+  const prompt = canAiGenerateContent();
+  if(prompt === ""){
+    return;
+  }
+  const btnContent = aiGenerateContentButton.querySelector("span") as HTMLSpanElement;
+  btnContent.textContent = "Generating...";
+  aiGenerateContentButton.disabled = true;
+  
+  //Fetch Here Later
+
+
+  btnContent.textContent = "Generate";
+  aiGenerateContentButton.disabled = false;
 });
 
 </script>

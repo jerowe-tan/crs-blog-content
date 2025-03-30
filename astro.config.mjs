@@ -35,6 +35,7 @@ export default defineConfig({
       'process.env.SECRET_R2_ACCESS_ID':JSON.stringify(process.env.SECRET_R2_ACCESS_ID),
       'process.env.SECRET_R2_SECRET_ACCESS_KEY':JSON.stringify(process.env.SECRET_R2_SECRET_ACCESS_KEY),
       'process.env.SECRET_R2_BUCKET_BLOG_NAME':JSON.stringify(process.env.SECRET_R2_BUCKET_BLOG_NAME),
+
     }
   },
 

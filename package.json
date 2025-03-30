@@ -23,7 +23,7 @@
     "@jsarmyknife/native--dom": "^0.1.10-beta.0",
     "@jsarmyknife/native--file": "^0.0.1-beta.0",
     "@jsarmyknife/native--friction": "^0.1.2-beta.0",
-    "@jsarmyknife/native--http": "^0.1.3-beta.0",
+    "@jsarmyknife/native--http": "^0.1.7-beta.0",
     "@jsarmyknife/native--icon": "^0.1.7-beta.0",
     "@jsarmyknife/native--location": "^0.0.2-beta.0",
     "@jsarmyknife/native--math": "^0.1.7-beta.0",
