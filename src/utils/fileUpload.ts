@@ -28,15 +28,20 @@ export async function getFile(key: string): Promise<{
   file: Buffer,
 }> {
   const command = new GetObjectCommand({ Bucket: bucket, Key: key });
+  console.log("COMMAND", command);
   const response = await s3Client.send(command);
+  console.log("RESPONSE", response);
   const body = response.Body;
   if (!body) {
     throw new Error('File not found');
   }
   const stream = body as NodeJS.ReadableStream;
+  console.log("STREAM", stream);
+  const buffer = await streamToBuffer(stream);
+  console.log("BUFFER", buffer);
   return {
     mimeType: response.ContentType || 'application/octet-stream',
-    file: await streamToBuffer(stream),
+    file: buffer,
   }
 }
 
