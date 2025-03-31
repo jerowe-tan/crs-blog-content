@@ -9,10 +9,10 @@ const {id="status-type-selection", class:className="", value="DRAFT"} = Astro.pr
 
 <astro-status-type-selection class={className}>
   <select id={id} class="select" value={value}>
-    <option selected={"DRAFT"} value="DRAFT">
+    <option selected={value == "DRAFT"} value="DRAFT">
       Draft
     </option>
-    <option selected={"PUBLISHED"} value="PUBLISHED">
+    <option selected={value=="PUBLISHED"} value="PUBLISHED">
       Published
     </option>
   </select>
