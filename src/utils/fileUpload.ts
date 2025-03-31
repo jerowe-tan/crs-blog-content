@@ -26,7 +26,7 @@ export async function streamToBuffer(
     // Handle NodeJS.ReadableStream by converting it to a Web ReadableStream
     const webStream = new ReadableStream<Uint8Array>({
       start(controller) {
-        (stream as NodeJS.ReadableStream).on('data', (chunk: Buffer) => {
+        (stream as NodeJS.ReadableStream).on('data', (chunk: any) => {
           controller.enqueue(new Uint8Array(chunk));
         });
         (stream as NodeJS.ReadableStream).on('error', (err: Error) => controller.error(err));
