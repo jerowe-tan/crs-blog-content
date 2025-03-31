@@ -1,23 +1,25 @@
 import { S3Client, GetObjectCommand, PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
 
 
-const s3Endpoint = import.meta.env.SECRET_S3_ENDPOINT!;
-const r2AccessKeyId = import.meta.env.SECRET_R2_ACCESS_ID!;
-const r2SecretAccessKey = import.meta.env.SECRET_R2_SECRET_ACCESS_KEY!;
-const bucket = import.meta.env.SECRET_R2_BUCKET_BLOG_NAME!;
+export const s3Client = ()=>{
+  const s3Endpoint = import.meta.env.SECRET_S3_ENDPOINT;
+  const r2AccessKeyId = import.meta.env.SECRET_R2_ACCESS_ID;
+  const r2SecretAccessKey = import.meta.env.SECRET_R2_SECRET_ACCESS_KEY;
 
-export const s3Client = new S3Client({
-  endpoint: s3Endpoint,
-  region: 'auto',
-  credentials: { accessKeyId: r2AccessKeyId, secretAccessKey: r2SecretAccessKey },
-  forcePathStyle: true,
-});
+  const s3 = new S3Client({
+    endpoint: s3Endpoint,
+    region: 'auto',
+    credentials: { accessKeyId: r2AccessKeyId, secretAccessKey: r2SecretAccessKey },
+    forcePathStyle: true,
+  });
+
+  return s3;
+}
 
 // A helper to convert a stream to a Buffer, useful for getFile.
 export async function streamToBuffer(
   stream: NodeJS.ReadableStream|ReadableStream|ReadableStream<Uint8Array>
 ): Promise<Uint8Array> {
-
   let reader: ReadableStreamDefaultReader<Uint8Array>;
   if (typeof (stream as any).getReader === 'function') {
     // Handle web streams (ReadableStream or ReadableStream<Uint8Array>)
@@ -55,8 +57,9 @@ export async function getFile(key: string): Promise<{
   mimeType: string;
   file: Uint8Array<ArrayBufferLike>,
 }> {
+  const bucket = import.meta.env.SECRET_R2_BUCKET_BLOG_NAME;
   const command = new GetObjectCommand({ Bucket: bucket, Key: key });
-  const response = await s3Client.send(command);
+  const response = await s3Client().send(command);
   const body = response.Body;
   if (!body) {
     throw new Error('File not found');
@@ -70,14 +73,16 @@ export async function getFile(key: string): Promise<{
 }
 
 export async function setFile(key: string, mimeType: string, file: File): Promise<void> {
+  const bucket = import.meta.env.SECRET_R2_BUCKET_BLOG_NAME;
   // Convert File to a Buffer
   const arrayBuffer = await file.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
   const command = new PutObjectCommand({ Bucket: bucket, Key: key, Body: buffer, ContentType: mimeType });
-  await s3Client.send(command);
+  await s3Client().send(command);
 }
 
 export async function deleteFile(key: string): Promise<void> {
+  const bucket = import.meta.env.SECRET_R2_BUCKET_BLOG_NAME;
   const command = new DeleteObjectCommand({ Bucket: bucket, Key: key });
-  await s3Client.send(command);
+  await s3Client().send(command);
 }

@@ -27,7 +27,6 @@ export const GET:APIRoute = async ({cookies, url, params})=>{
   }
 
   //Prepare file location
-
   const blogContent = await getFile((blog.rows[0] as any).markdown_link);
 
   if(blogContent == null || blogContent.file == null){
