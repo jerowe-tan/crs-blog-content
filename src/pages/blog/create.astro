@@ -158,7 +158,7 @@ import {Modal} from "@jsarmyknife/native--pop"
 import { DOMPopTransformer, E } from '@jsarmyknife/native--dom';
 import { convertFileToBase64 } from '@jsarmyknife/native--file';
 import { actions } from 'astro:actions';
-import { transformDate } from '@jsarmyknife/native--math';
+import { DateNavigator, transformDate } from '@jsarmyknife/native--math';
 import { navigate } from 'astro:transitions/client';
 import { ApiSuggestBlogTitle } from 'src/script/clientApi';
 import { ApiSuggestBlogTags } from 'src/script/clientApi';
@@ -456,7 +456,7 @@ blogForm.addEventListener("submit", async (e)=>{
   const payload = {
     author: authorInput.value,
     title: titleInput.value,
-    published: transformDate(new Date(publishedInput.value), "iso-extended"),
+    published: new DateNavigator(publishedInput.value).setTimezone("Asia/Manila").toISOStringRevise(),
     content: editor.getMarkdown() as string,
     contentType: contentTypeSelection.value as "BLOG" | "ANNOUNCEMENT" | "MAINTENANCE" | "NEWS",
     status: statusSelection.value as "DRAFT" | "PUBLISHED",
