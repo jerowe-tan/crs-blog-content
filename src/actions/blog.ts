@@ -84,11 +84,8 @@ export const blog = {
       
       //Get old blog data
       const oldBlog = await getBlog(slug);
-      oldBlog.rows[0] as unknown as DATA_DB;
 
-      const data = {
-        ...oldBlog.rows[0] as unknown as DATA_DB
-      } as DATA_DB;
+      const data = oldBlog.rows[0] as unknown as DATA_DB;
 
       let slugChanged = false;
 
@@ -123,19 +120,20 @@ export const blog = {
         //Re-upload with new slug key
         let newThumbnail:File|undefined = undefined;
         let newContentMarkdown:File|undefined = undefined;
-        if(slugChanged && oldThumbnail && oldMarkdown){
-          newThumbnail = new File([oldThumbnail.file], "thumbnail", { type: oldThumbnail.mimeType });
-          newContentMarkdown = new File([oldMarkdown.file], "content.md", { type: oldMarkdown.mimeType });
+        if(slugChanged && oldThumbnail != undefined && oldMarkdown != undefined){
+          newThumbnail = new File([oldThumbnail.file], data.slug+"_thumbnail", { type: oldThumbnail.mimeType });
+          newContentMarkdown = new File([oldMarkdown.file], data.slug+"_content.md", { type: oldMarkdown.mimeType });
         }
         if(input.thumbnail){
-          newThumbnail = convertBase64ToFile(input.thumbnail, "thumbnail.png");
+          newThumbnail = convertBase64ToFile(input.thumbnail, data.slug+"_thumbnail");
         }
         if(input.content){
-          newContentMarkdown = new File([input.content], "content.md", { type: "text/markdown" });
+          newContentMarkdown = new File([input.content], data.slug+"_content.md", { type: "text/markdown" });
         }
-
+        // console.log("newThumbnail", newThumbnail);
+        // console.log("newContentMarkdown", newContentMarkdown);
         if(newThumbnail){
-          await setFile(`/thumbnail/${data.slug}`, (newThumbnail as File).type, newThumbnail);
+          await setFile(`/thumbnail/${data.slug}`, newThumbnail.type, newThumbnail);
         }
         if(newContentMarkdown){
           await setFile(`/blog/${data.slug}`, "text/markdown", newContentMarkdown);
